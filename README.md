@@ -10,7 +10,7 @@ This is a classical game that is developed in Vue3.
 - If the snake hits the grid boundaries, it will continue to move in the same direction from the opposite end.
 - The player needs to navigate the snake to the snack in order to have the snake grow and gain score.
 - Each eaten snack contributes 1 point to the score.
-- If the snake hits it's own tail, then the game is over.
+- If the snake hits its own tail, then the game is over.
 
 ## Development
 
