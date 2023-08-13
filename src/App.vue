@@ -40,7 +40,6 @@ import VGrid from "@/components/Grid.vue";
 import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
 
-const TICK_RATE = 150;
 const GRID_SIZE = 35;
 const DIRECTION_TICKS = {
   UP: (x, y) => ({ x, y: y <= 0 ? GRID_SIZE - 1 : y - 1 }),
@@ -81,6 +80,7 @@ export default {
     const snakeHead = computed(() => store.state.snake.coordinates[0]);
     const snakeTail = computed(() => store.state.snake.coordinates.slice(1));
     const score = computed(() => store.state.snake?.coordinates?.length - 1);
+    const tickRate = computed(() => store.state.tickRate);
 
     // Interval variable
     let interval = null;
@@ -100,7 +100,7 @@ export default {
       let newCoordinate = getRandomCoordinate();
 
       if (
-        store.state.snake.coordinates.find((snakeCellCoordinate) =>
+        snake.value.coordinates.find((snakeCellCoordinate) =>
           areSameCoordinates(snakeCellCoordinate, newCoordinate)
         )
       )
@@ -192,7 +192,7 @@ export default {
 
       interval = setInterval(() => {
         onTick();
-      }, TICK_RATE);
+      }, tickRate.value);
     }
 
     function onStopGame() {

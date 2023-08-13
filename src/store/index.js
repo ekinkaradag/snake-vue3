@@ -18,6 +18,7 @@ const store = createStore({
       grid: [],
       snake: {},
       snack: {},
+      tickRate: 150,
       isPlaying: false,
 
       // non-game related
@@ -50,6 +51,7 @@ const store = createStore({
     },
     SNAKE_MOVE(state, payload) {
       const isSnakeEating = payload.isSnakeEating;
+      if (isSnakeEating) state.tickRate += 1;
 
       const snakeHead_new = payload.directionTicks[state.playground.direction](
         payload.snakeHead.x,
