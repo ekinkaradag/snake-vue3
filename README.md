@@ -2,6 +2,8 @@
 
 This is a classical game that is developed in Vue3.
 
+![](https://github.com/ekinkaradag/snake-vue3/blob/master/repo-assets/gameplay_sneak-peek.gif")
+
 ### Rules
 
 - The game is played in a 35x35 grid.
