@@ -2,7 +2,7 @@
 
 This is a classical game that is developed in Vue3.
 
-![](https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_sneak-peek.gif")
+![](https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_sneak-peek.gif)
 
 ### Rules
 
