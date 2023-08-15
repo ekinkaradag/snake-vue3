@@ -1,7 +1,7 @@
 # Snake
 
 <p align="center">
-  <img src="https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_sneak-peek.gif?raw=true" align="center" alt="asd" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage">
+  <img src="https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_screenshot.png?raw=true" align="center" alt="asd" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage">
 </p>
 
 ### Rules
