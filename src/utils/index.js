@@ -12,9 +12,7 @@ function areSameCoordinates(coordinates_a, coordinates_b) {
 }
 
 function isSnake(snakeCoordinates, x, y) {
-  if (!snakeCoordinates.length) {
-    return 0;
-  }
+  if (!snakeCoordinates.length) return 0;
 
   return snakeCoordinates.filter((coord) => isPosition(coord.x, coord.y, x, y))
     .length;
