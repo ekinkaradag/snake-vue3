@@ -12,16 +12,19 @@ function areSameCoordinates(coordinates_a, coordinates_b) {
 }
 
 function isSnake(snakeCoordinates, x, y) {
-  if (!snakeCoordinates.length) {
-    return 0;
-  }
+  if (!snakeCoordinates.length) return false;
 
-  return snakeCoordinates.filter((coord) => isPosition(coord.x, coord.y, x, y))
-    .length;
+  return (
+    snakeCoordinates.filter((coord) => isPosition(coord.x, coord.y, x, y))
+      .length > 0
+  );
 }
 
 function isSnack(x, y, snack) {
   return isPosition(x, y, snack.coordinate.x, snack.coordinate.y);
 }
 
-export { areSameCoordinates, isSnake, isSnack };
+function isWall(x, y, gridSize) {
+  return (x < 0 || x >= gridSize) && (y < 0 || y >= gridSize);
+}
+export { areSameCoordinates, isSnake, isSnack, isWall };

@@ -1,11 +1,16 @@
 import { createStore, createLogger } from "vuex";
 import { areSameCoordinates } from "@/utils/index";
 
-export const directions = {
+export const Directions = {
   UP: "UP",
   DOWN: "DOWN",
   RIGHT: "RIGHT",
   LEFT: "LEFT",
+};
+
+export const GameRules = {
+  WITH_BORDERS: "WITH_BORDERS",
+  WITHOUT_BORDERS: "WITHOUT_BORDERS",
 };
 
 const store = createStore({
@@ -63,28 +68,28 @@ const store = createStore({
         !snakeNeck || !areSameCoordinates(snakeHead_new, snakeNeck)
           ? snakeHead_new
           : payload.snakeHead.x > snakeNeck.x
-          ? payload.directionTicks[directions.RIGHT](
+          ? payload.directionTicks[Directions.RIGHT](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
           : payload.snakeHead.x < snakeNeck.x
-          ? payload.directionTicks[directions.LEFT](
+          ? payload.directionTicks[Directions.LEFT](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
           : payload.snakeHead.y > snakeNeck.y
-          ? payload.directionTicks[directions.DOWN](
+          ? payload.directionTicks[Directions.DOWN](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
-          : payload.directionTicks[directions.UP](
+          : payload.directionTicks[Directions.UP](
               payload.snakeHead.x,
               payload.snakeHead.y
             );
 
       const snakeTail = isSnakeEating
         ? state.snake.coordinates
-        : payload.snakeWithoutStub;
+        : payload.snakeTail;
       const snackCoordinate = isSnakeEating
         ? payload.snackRandomCoordinate
         : state.snack.coordinate;
@@ -108,10 +113,10 @@ const store = createStore({
 
 function areOppositeDirections(direction_a, direction_b) {
   return (
-    (direction_a === directions.UP && direction_b === directions.DOWN) ||
-    (direction_a === directions.DOWN && direction_b === directions.UP) ||
-    (direction_a === directions.LEFT && direction_b === directions.RIGHT) ||
-    (direction_a === directions.RIGHT && direction_b === directions.LEFT)
+    (direction_a === Directions.UP && direction_b === Directions.DOWN) ||
+    (direction_a === Directions.DOWN && direction_b === Directions.UP) ||
+    (direction_a === Directions.LEFT && direction_b === Directions.RIGHT) ||
+    (direction_a === Directions.RIGHT && direction_b === Directions.LEFT)
   );
 }
 

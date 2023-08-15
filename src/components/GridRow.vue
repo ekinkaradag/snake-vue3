@@ -1,11 +1,26 @@
 <template>
-  <div class="grid-row">
+  <div v-if="grid.length > 0" class="grid-row">
+    <v-grid-cell
+      :key="-1"
+      :coordinate-x="-1"
+      :coordinate-y="coordinateY"
+      :grid-size="grid.length"
+      :is-wall-cell="true"
+    />
     <v-grid-cell
       v-for="(cell, key) in grid"
       :key="key"
-      :coordinate-y="coordinateY"
       :coordinate-x="cell"
+      :coordinate-y="coordinateY"
       :grid-size="grid.length"
+      :is-wall-cell="isFloorOrCeilingWall"
+    />
+    <v-grid-cell
+      :key="grid.length"
+      :coordinate-x="grid.length"
+      :coordinate-y="coordinateY"
+      :grid-size="grid.length"
+      :is-wall-cell="true"
     />
   </div>
 </template>
@@ -20,6 +35,11 @@ export default {
     coordinateY: {
       type: Number,
       required: true,
+    },
+    isFloorOrCeilingWall: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 

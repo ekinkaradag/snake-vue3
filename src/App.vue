@@ -4,17 +4,19 @@
       <div class="version">Version {{ $store.getters.appVersion }}</div>
       <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
     </div>
-    <h1 class="title">S N A K E</h1>
-
+    <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame"
-      :style="{
-        marginBottom: '20px',
-      }"
-      title="Play"
+      @click="onStartGame(gameRules.WITHOUT_BORDERS)"
+      title="Play without borders"
+      class="button-play"
     />
-
+    <v-button
+      v-if="!isPlaying"
+      @click="onStartGame(gameRules.WITH_BORDERS)"
+      title="Play with borders"
+      class="button-play"
+    />
     <v-button
       v-else
       @click="onStopGame"
@@ -32,7 +34,7 @@
 import { computed, onMounted, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
-import { directions } from "@/store/index";
+import { Directions, GameRules } from "@/store/index";
 
 // Components
 import VButton from "@/components/Button.vue";
@@ -41,24 +43,30 @@ import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
 
 const GRID_SIZE = 35;
-const DIRECTION_TICKS = {
+const DIRECTION_TICKS_WITHOUT_BORDERS = {
   UP: (x, y) => ({ x, y: y <= 0 ? GRID_SIZE - 1 : y - 1 }),
   DOWN: (x, y) => ({ x, y: y >= GRID_SIZE - 1 ? 0 : y + 1 }),
   RIGHT: (x, y) => ({ x: x >= GRID_SIZE - 1 ? 0 : x + 1, y }),
   LEFT: (x, y) => ({ x: x <= 0 ? GRID_SIZE - 1 : x - 1, y }),
 };
+const DIRECTION_TICKS_WITH_BORDERS = {
+  UP: (x, y) => ({ x, y: y - 1 }),
+  DOWN: (x, y) => ({ x, y: y + 1 }),
+  RIGHT: (x, y) => ({ x: x + 1, y }),
+  LEFT: (x, y) => ({ x: x - 1, y }),
+};
 const KEY_CODES_MAPPER = {
-  38: directions.UP, // ARROW_UP Key
-  87: directions.UP, // W Key
+  38: Directions.UP, // ARROW_UP Key
+  87: Directions.UP, // W Key
 
-  39: directions.RIGHT, // ARROW_RIGHT Key
-  68: directions.RIGHT, // D Key
+  39: Directions.RIGHT, // ARROW_RIGHT Key
+  68: Directions.RIGHT, // D Key
 
-  37: directions.LEFT, // ARROW_LEFT Key
-  65: directions.LEFT, // A Key
+  37: Directions.LEFT, // ARROW_LEFT Key
+  65: Directions.LEFT, // A Key
 
-  40: directions.DOWN, // ARROW_DOWN Key
-  83: directions.DOWN, // S Key
+  40: Directions.DOWN, // ARROW_DOWN Key
+  83: Directions.DOWN, // S Key
 };
 
 export default {
@@ -73,6 +81,7 @@ export default {
 
   setup() {
     const store = useStore();
+    const gameRules = computed(() => GameRules);
     const isPlaying = computed(() => store.state.isPlaying);
     const currentDirection = computed(() => store.state.playground.direction);
     const snack = computed(() => store.state.snack);
@@ -109,7 +118,7 @@ export default {
       return newCoordinate;
     }
 
-    function getSnakeWithoutStub() {
+    function getSnakeTail() {
       return snake.value.coordinates.slice(
         0,
         snake.value.coordinates.length - 1
@@ -128,7 +137,9 @@ export default {
 
     function generateSnake() {
       const snake = {
-        coordinates: [getRandomCoordinate()],
+        coordinates: [
+          { x: Math.ceil(GRID_SIZE / 2), y: Math.ceil(GRID_SIZE / 2) },
+        ],
       };
 
       store.commit("SET_SNAKE", snake);
@@ -153,12 +164,21 @@ export default {
       store.commit("RESET_GAME");
     }
 
-    function isSnakeClumy() {
+    function snakeHeadTouchesTail() {
       return isSnake(snakeTail.value, snakeHead.value.x, snakeHead.value.y);
     }
 
     function isSnakeEating() {
       return areSameCoordinates(snakeHead.value, snack.value.coordinate);
+    }
+
+    function isSnakeOutside() {
+      return (
+        snakeHead.value.x >= GRID_SIZE ||
+        snakeHead.value.y >= GRID_SIZE ||
+        snakeHead.value.x < 0 ||
+        snakeHead.value.y < 0
+      );
     }
 
     function onChangeDirection(e) {
@@ -170,28 +190,34 @@ export default {
       store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
     }
 
-    function onTick() {
-      if (isSnakeClumy()) {
+    function onTick(gameRule) {
+      if (
+        snakeHeadTouchesTail() ||
+        (gameRule === gameRules.value.WITH_BORDERS && isSnakeOutside())
+      ) {
         store.commit("GAME_OVER");
         onStopGame();
       } else {
         store.commit("SNAKE_MOVE", {
           isSnakeEating: isSnakeEating(),
-          directionTicks: DIRECTION_TICKS,
+          directionTicks:
+            gameRule === gameRules.value.WITHOUT_BORDERS
+              ? DIRECTION_TICKS_WITHOUT_BORDERS
+              : DIRECTION_TICKS_WITH_BORDERS,
           snakeHead: snakeHead.value,
-          snakeWithoutStub: getSnakeWithoutStub(),
+          snakeTail: getSnakeTail(),
           snackRandomCoordinate: getRandomSnackCoordinate(),
         });
       }
     }
 
-    function onStartGame() {
+    function onStartGame(gameRule) {
       onStopGame();
       generateInitials();
       store.commit("IS_PLAYING", true);
 
       interval = setInterval(() => {
-        onTick();
+        onTick(gameRule);
       }, tickRate.value);
     }
 
@@ -210,6 +236,7 @@ export default {
     });
 
     return {
+      gameRules,
       isPlaying,
       score,
       onStartGame,
@@ -228,8 +255,16 @@ body {
   text-align: center;
 }
 
+.button-play {
+  margin: 0 10px;
+  margin-bottom: 20px;
+  width: 190px;
+}
+
 .title {
   color: rgb(0, 199, 0);
+  margin-left: 30px;
+  letter-spacing: 30px;
   text-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
     1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 64px lightgreen,
     0 0 64px lightgreen;

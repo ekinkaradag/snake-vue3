@@ -5,7 +5,7 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { isSnake, isSnack } from "@/utils/index";
+import { isSnake, isWall, isSnack } from "@/utils/index";
 
 export default {
   props: {
@@ -21,6 +21,11 @@ export default {
       type: Number,
       required: true,
     },
+    isWallCell: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
 
   setup(props) {
@@ -30,7 +35,7 @@ export default {
     const isGameOver = computed(() => store.state.playground.isGameOver);
 
     const classNames = computed(() => ({
-      "grid-cell-snake-head": snake.value.coordinates[0]
+      "grid-cell-snake-head": snake.value.coordinates
         ? isSnake(
             [snake.value.coordinates[0]],
             props.coordinateX,
@@ -44,6 +49,7 @@ export default {
         ? isSnack(props.coordinateX, props.coordinateY, snack.value)
         : false,
       "grid-cell-game-over": isGameOver.value,
+      "grid-cell-wall": props.isWallCell,
     }));
 
     return {
@@ -65,15 +71,15 @@ export default {
   border-left: 1px solid #363636;
 }
 
-.grid-cell-border {
-  background-color: #363636;
+.grid-cell-wall:not(.grid-cell-snake.grid-cell-game-over.grid-cell-snake-head) {
+  background-color: #00d9ff;
 }
 
-.grid-cell-snake-head {
+.grid-cell-snake-head:not(.grid-cell-game-over) {
   background-color: #15ff00 !important;
 }
 
-.grid-cell-snake {
+.grid-cell-snake:not(.grid-cell-game-over) {
   background-color: #086600;
 }
 
@@ -86,6 +92,6 @@ export default {
 }
 
 .grid-cell-snack {
-  background-color: #7a11f3;
+  background-color: #d87bf0;
 }
 </style>
