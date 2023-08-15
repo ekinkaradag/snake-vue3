@@ -230,6 +230,7 @@ body {
 
 .title {
   color: rgb(0, 199, 0);
+  margin-left: 30px;
   letter-spacing: 30px;
   text-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
     1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 64px lightgreen,
