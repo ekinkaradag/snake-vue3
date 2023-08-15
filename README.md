@@ -1,8 +1,8 @@
 # Snake
 
-This is a classical game that is developed in Vue3.
-
-![](https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_sneak-peek.gif)
+<p align="center">
+  <img src="https://github.com/ekinkaradag/snake-vue3/blob/main/repo-assets/gameplay_screenshot.png?raw=true" align="center" alt="asd" style="max-width: 100%; display: inline-block;" data-target="animated-image.originalImage">
+</p>
 
 ### Rules
 
@@ -14,9 +14,11 @@ This is a classical game that is developed in Vue3.
 - If the snake hits its own tail, then the game is over.
 
 #### Rules of "Play without borders"
+
 - If the snake hits the grid borders, it will continue to move in the same direction from the opposite end.
 
 #### Rules of "Play with borders"
+
 - If the snake hits the grid boundaries, then the game is over.
 
 ## Development
