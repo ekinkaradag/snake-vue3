@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-row">
+  <div v-if="grid.length > 0" class="grid-row">
     <v-grid-cell
       :key="-1"
       :coordinate-x="-1"
