@@ -176,8 +176,8 @@ export default {
       return (
         snakeHead.value.x >= GRID_SIZE ||
         snakeHead.value.y >= GRID_SIZE ||
-        snakeHead.value.x <= 0 ||
-        snakeHead.value.y <= 0
+        snakeHead.value.x < 0 ||
+        snakeHead.value.y < 0
       );
     }
 
