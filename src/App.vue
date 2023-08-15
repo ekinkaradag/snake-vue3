@@ -4,7 +4,7 @@
       <div class="version">Version {{ $store.getters.appVersion }}</div>
       <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
     </div>
-    <h1 class="title">S N A K E</h1>
+    <h1 class="title">SNAKE</h1>
 
     <v-button
       v-if="!isPlaying"
@@ -230,6 +230,7 @@ body {
 
 .title {
   color: rgb(0, 199, 0);
+  letter-spacing: 30px;
   text-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
     1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 64px lightgreen,
     0 0 64px lightgreen;
