@@ -5,16 +5,18 @@
       <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
     </div>
     <h1 class="title">SNAKE</h1>
-
     <v-button
       v-if="!isPlaying"
       @click="onStartGame"
-      :style="{
-        marginBottom: '20px',
-      }"
-      title="Play"
+      title="Play without boundaries"
+      class="button-play"
     />
-
+    <v-button
+      v-if="!isPlaying"
+      @click="onStartGame"
+      title="Play with boundaries"
+      class="button-play"
+    />
     <v-button
       v-else
       @click="onStopGame"
@@ -226,6 +228,12 @@ body {
 .page {
   width: 100%;
   text-align: center;
+}
+
+.button-play {
+  margin: 0 10px;
+  margin-bottom: 20px;
+  width: 217px;
 }
 
 .title {
