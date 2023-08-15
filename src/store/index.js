@@ -9,8 +9,8 @@ export const Directions = {
 };
 
 export const GameRules = {
-  WITH_BOUNDARIES: "WITH_BOUNDARIES",
-  WITHOUT_BOUNDARIES: "WITHOUT_BOUNDARIES",
+  WITH_BORDERS: "WITH_BORDERS",
+  WITHOUT_BORDERS: "WITHOUT_BORDERS",
 };
 
 const store = createStore({

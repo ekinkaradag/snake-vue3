@@ -7,14 +7,14 @@
     <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRules.WITHOUT_BOUNDARIES)"
-      title="Play without boundaries"
+      @click="onStartGame(gameRules.WITHOUT_BORDERS)"
+      title="Play without borders"
       class="button-play"
     />
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRules.WITH_BOUNDARIES)"
-      title="Play with boundaries"
+      @click="onStartGame(gameRules.WITH_BORDERS)"
+      title="Play with borders"
       class="button-play"
     />
     <v-button
@@ -43,13 +43,13 @@ import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
 
 const GRID_SIZE = 35;
-const DIRECTION_TICKS_WITHOUT_BOUNDARIES = {
+const DIRECTION_TICKS_WITHOUT_BORDERS = {
   UP: (x, y) => ({ x, y: y <= 0 ? GRID_SIZE - 1 : y - 1 }),
   DOWN: (x, y) => ({ x, y: y >= GRID_SIZE - 1 ? 0 : y + 1 }),
   RIGHT: (x, y) => ({ x: x >= GRID_SIZE - 1 ? 0 : x + 1, y }),
   LEFT: (x, y) => ({ x: x <= 0 ? GRID_SIZE - 1 : x - 1, y }),
 };
-const DIRECTION_TICKS_WITH_BOUNDARIES = {
+const DIRECTION_TICKS_WITH_BORDERS = {
   UP: (x, y) => ({ x, y: y - 1 }),
   DOWN: (x, y) => ({ x, y: y + 1 }),
   RIGHT: (x, y) => ({ x: x + 1, y }),
@@ -193,7 +193,7 @@ export default {
     function onTick(gameRule) {
       if (
         snakeHeadTouchesTail() ||
-        (gameRule === gameRules.value.WITH_BOUNDARIES && isSnakeOutside())
+        (gameRule === gameRules.value.WITH_BORDERS && isSnakeOutside())
       ) {
         store.commit("GAME_OVER");
         onStopGame();
@@ -201,9 +201,9 @@ export default {
         store.commit("SNAKE_MOVE", {
           isSnakeEating: isSnakeEating(),
           directionTicks:
-            gameRule === gameRules.value.WITHOUT_BOUNDARIES
-              ? DIRECTION_TICKS_WITHOUT_BOUNDARIES
-              : DIRECTION_TICKS_WITH_BOUNDARIES,
+            gameRule === gameRules.value.WITHOUT_BORDERS
+              ? DIRECTION_TICKS_WITHOUT_BORDERS
+              : DIRECTION_TICKS_WITH_BORDERS,
           snakeHead: snakeHead.value,
           snakeTail: getSnakeTail(),
           snackRandomCoordinate: getRandomSnackCoordinate(),
@@ -258,7 +258,7 @@ body {
 .button-play {
   margin: 0 10px;
   margin-bottom: 20px;
-  width: 217px;
+  width: 190px;
 }
 
 .title {
