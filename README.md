@@ -119,7 +119,7 @@ git clone https://github.com/ekinkaradag/snake-vue3.git
   npm run deploy
   ```
 
-## 👏 Thank you
+## Thank you 👏
 Thanks to all the supporters of the project! If you would like to contribute, make sure to check out [`CONTRIBUTING.md`](https://github.com/ekinkaradag/snake-vue3/blob/main/CONTRIBUTING.md)
 
 **Stargazers:**
