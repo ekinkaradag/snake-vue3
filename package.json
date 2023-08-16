@@ -1,7 +1,7 @@
 {
   "homepage": "https://ekinkaradag.github.io/snake-vue3/",
   "name": "vue-snake",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
