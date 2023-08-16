@@ -183,9 +183,15 @@ export default {
 
     function onChangeDirection(e) {
       const newDirection = KEY_CODES_MAPPER[e.keyCode];
+
+      // Prevent scrolling if the user pushed an arrow key for navigating the snake
+      if (newDirection) e.preventDefault();
       if (!newDirection || newDirection === currentDirection.value) {
         return;
       }
+
+      // Prevent scrolling if the user pushed an arrow key for navigating the snake
+      e.preventDefault();
 
       store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
     }
