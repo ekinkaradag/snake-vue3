@@ -190,9 +190,6 @@ export default {
         return;
       }
 
-      // Prevent scrolling if the user pushed an arrow key for navigating the snake
-      e.preventDefault();
-
       store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
     }
 
