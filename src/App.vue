@@ -91,6 +91,9 @@ export default {
     const score = computed(() => store.state.snake?.coordinates?.length - 1);
     const tickRate = computed(() => store.state.tickRate);
 
+    var touchStartCoordinateX = null;
+    var touchStartCoordinateY = null;
+
     // Interval variable
     let interval = null;
 
@@ -181,7 +184,7 @@ export default {
       );
     }
 
-    function onChangeDirection(e) {
+    function onKeyDown(e) {
       const newDirection = KEY_CODES_MAPPER[e.keyCode];
 
       // Prevent scrolling if the user pushed an arrow key for navigating the snake
@@ -191,6 +194,53 @@ export default {
       }
 
       store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
+    }
+
+    function getTouches(evt) {
+      return (
+        evt.touches || // browser API
+        evt.originalEvent.touches
+      ); // jQuery
+    }
+
+    function onTouchStart(e) {
+      const firstTouch = getTouches(e)[0];
+      touchStartCoordinateX = firstTouch.clientX;
+      touchStartCoordinateY = firstTouch.clientY;
+    }
+
+    function onTouchMove(e) {
+      if (!touchStartCoordinateX || !touchStartCoordinateY) {
+        return;
+      }
+
+      var touchCoordinateX = e.touches[0].clientX;
+      var touchCoordinateY = e.touches[0].clientY;
+
+      var diffX = touchStartCoordinateX - touchCoordinateX;
+      var diffY = touchStartCoordinateY - touchCoordinateY;
+
+      /* reset touchStart values */
+      touchStartCoordinateX = null;
+      touchStartCoordinateY = null;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          store.commit("SNAKE_CHANGE_DIRECTION", Directions.LEFT);
+          return;
+        } else {
+          store.commit("SNAKE_CHANGE_DIRECTION", Directions.RIGHT);
+          return;
+        }
+      } else {
+        if (diffY > 0) {
+          store.commit("SNAKE_CHANGE_DIRECTION", Directions.UP);
+          return;
+        } else {
+          store.commit("SNAKE_CHANGE_DIRECTION", Directions.DOWN);
+          return;
+        }
+      }
     }
 
     function onTick(gameRule) {
@@ -230,15 +280,21 @@ export default {
     }
 
     onMounted(() => {
-      window.addEventListener("keydown", onChangeDirection);
+      window.addEventListener("keydown", onKeyDown);
+
+      window.addEventListener("touchstart", onTouchStart);
+      window.addEventListener("touchmove", onTouchMove);
     });
 
     onBeforeUnmount(() => {
-      window.removeEventListener("keydown", onChangeDirection);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       clearInterval(interval);
     });
 
     return {
+      customEventKey,
       gameRules,
       isPlaying,
       score,
