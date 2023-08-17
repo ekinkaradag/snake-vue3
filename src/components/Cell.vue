@@ -62,8 +62,8 @@ export default {
 <style>
 .grid-cell {
   border-top: 1px solid #363636;
+  aspect-ratio: auto 1 / 1;
   width: 15px;
-  height: 15px;
   position: relative;
 }
 

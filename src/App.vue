@@ -294,7 +294,6 @@ export default {
     });
 
     return {
-      customEventKey,
       gameRules,
       isPlaying,
       score,
