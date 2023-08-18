@@ -69,6 +69,6 @@ export default {
 }
 
 .icon {
-  margin: 0 20px;
+  margin: 0 5px;
 }
 </style>
