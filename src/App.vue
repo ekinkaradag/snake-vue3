@@ -26,7 +26,16 @@
       title="Stop"
     />
     <v-playground :score="score" />
-    <v-social-links class="footer" />
+    <div class="footer">
+      <v-social-links class="social-links" />
+      <br />
+      <a
+        class="source-code--link"
+        target="_blank"
+        href="https:github.com/ekinkaradag/snake-vue3"
+        >View Source Code</a
+      >
+    </div>
   </div>
 </template>
 
@@ -281,11 +290,32 @@ body {
   display: flex;
   flex-direction: row;
   color: gray;
+  font-family: sans-serif;
 }
 
 .disclaimer {
   flex: 1;
   text-align: end;
+}
+
+.social-links {
+  margin-bottom: 10px;
+}
+
+.source-code--link {
+  background-color: gray;
+  color: black !important;
+  font-size: 14px;
+  font-weight: 800;
+  border: solid gray;
+  border-top-width: 2.6px;
+  border-bottom-width: 2.6px;
+  border-left-width: 16.6px;
+  border-right-width: 16.6px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif;
 }
 
 .footer {
