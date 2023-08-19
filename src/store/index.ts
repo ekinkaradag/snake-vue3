@@ -27,7 +27,7 @@ const store = createStore({
       tickRate: 150,
       isPlaying: false,
 
-      packageVersion: "0",
+      packageVersion: __APP_VERSION__ || "0",
     };
     return _store;
   },
