@@ -1,4 +1,5 @@
 import { createStore, createLogger } from "vuex";
+import { type Snake, Snack, Store } from "./interfaces";
 import { areSameCoordinates } from "@/utils/index";
 
 export const Directions = {
@@ -15,20 +16,21 @@ export const GameRules = {
 
 const store = createStore({
   state() {
-    return {
+    const _store: Store = {
       playground: {
         direction: "RIGHT",
         isGameOver: false,
       },
       grid: [],
-      snake: {},
-      snack: {},
+      snake: undefined,
+      snack: undefined,
       tickRate: 150,
       isPlaying: false,
 
       // non-game related
-      packageVersion: APP_VERSION || "0",
+      packageVersion: "0",
     };
+    return _store;
   },
 
   mutations: {
@@ -43,8 +45,8 @@ const store = createStore({
     },
     RESET_GAME(state) {
       state.grid = [];
-      state.snack = {};
-      state.snake = {};
+      state.snack = undefined;
+      state.snake = undefined;
       state.playground.isGameOver = false;
     },
     IS_PLAYING(state, val) {
@@ -55,6 +57,8 @@ const store = createStore({
         state.playground.direction = direction;
     },
     SNAKE_MOVE(state, payload) {
+      if (!state.snake) return;
+      if (!state.snack) return;
       const isSnakeEating = payload.isSnakeEating;
       if (isSnakeEating) state.tickRate += 1;
 
@@ -108,7 +112,7 @@ const store = createStore({
     },
   },
 
-  plugins: [createLogger],
+  // plugins: [createLogger],
 });
 
 function areOppositeDirections(direction_a, direction_b) {

@@ -1,8 +1,15 @@
-function isPosition(x, y, diffX, diffY) {
+import { Coordinate } from "@/store/interfaces";
+
+function isPosition(
+  x: number,
+  y: number,
+  diffX: number,
+  diffY: number
+): boolean {
   return x === diffX && y === diffY;
 }
 
-function areSameCoordinates(coordinates_a, coordinates_b) {
+function areSameCoordinates(coordinates_a: Coordinate, coordinates_b): boolean {
   return isPosition(
     coordinates_a.x,
     coordinates_a.y,
@@ -11,7 +18,7 @@ function areSameCoordinates(coordinates_a, coordinates_b) {
   );
 }
 
-function isSnake(snakeCoordinates, x, y) {
+function isSnake(snakeCoordinates, x, y): boolean {
   if (!snakeCoordinates.length) return false;
 
   return (
@@ -20,11 +27,11 @@ function isSnake(snakeCoordinates, x, y) {
   );
 }
 
-function isSnack(x, y, snack) {
+function isSnack(x, y, snack): boolean {
   return isPosition(x, y, snack.coordinate.x, snack.coordinate.y);
 }
 
-function isWall(x, y, gridSize) {
+function isWall(x, y, gridSize): boolean {
   return (x < 0 || x >= gridSize) && (y < 0 || y >= gridSize);
 }
 export { areSameCoordinates, isSnake, isSnack, isWall };

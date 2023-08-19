@@ -5,7 +5,7 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { isSnake, isWall, isSnack } from "@/utils/index";
+import { isSnake, isSnack } from "@/utils/index";
 
 export default {
   props: {
