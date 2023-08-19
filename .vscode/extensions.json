@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "vue.vscode-typescript-vue-plugin",
+    "octref.vetur",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "mgmcdermott.vscode-language-babel"
+  ]
+}

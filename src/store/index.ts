@@ -1,33 +1,22 @@
-import { createStore, createLogger } from "vuex";
-import { areSameCoordinates } from "@/utils/index";
-
-export const Directions = {
-  UP: "UP",
-  DOWN: "DOWN",
-  RIGHT: "RIGHT",
-  LEFT: "LEFT",
-};
-
-export const GameRules = {
-  WITH_BORDERS: "WITH_BORDERS",
-  WITHOUT_BORDERS: "WITHOUT_BORDERS",
-};
+import { createStore } from "vuex";
+import { Direction } from "@/store/enums";
+import { type IStore } from "@/store/interfaces";
+import { areOppositeDirections, areSameCoordinates } from "@/utils/index";
 
 const store = createStore({
   state() {
     return {
       playground: {
-        direction: "RIGHT",
+        direction: Direction.RIGHT,
         isGameOver: false,
       },
       grid: [],
-      snake: {},
-      snack: {},
+      snake: undefined,
+      snack: undefined,
       tickRate: 150,
       isPlaying: false,
 
-      // non-game related
-      packageVersion: APP_VERSION || "0",
+      packageVersion: __APP_VERSION__ || "0",
     };
   },
 
@@ -43,8 +32,8 @@ const store = createStore({
     },
     RESET_GAME(state) {
       state.grid = [];
-      state.snack = {};
-      state.snake = {};
+      state.snack = undefined;
+      state.snake = undefined;
       state.playground.isGameOver = false;
     },
     IS_PLAYING(state, val) {
@@ -55,6 +44,8 @@ const store = createStore({
         state.playground.direction = direction;
     },
     SNAKE_MOVE(state, payload) {
+      if (!state.snake) return;
+      if (!state.snack) return;
       const isSnakeEating = payload.isSnakeEating;
       if (isSnakeEating) state.tickRate += 1;
 
@@ -68,21 +59,21 @@ const store = createStore({
         !snakeNeck || !areSameCoordinates(snakeHead_new, snakeNeck)
           ? snakeHead_new
           : payload.snakeHead.x > snakeNeck.x
-          ? payload.directionTicks[Directions.RIGHT](
+          ? payload.directionTicks[Direction.RIGHT](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
           : payload.snakeHead.x < snakeNeck.x
-          ? payload.directionTicks[Directions.LEFT](
+          ? payload.directionTicks[Direction.LEFT](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
           : payload.snakeHead.y > snakeNeck.y
-          ? payload.directionTicks[Directions.DOWN](
+          ? payload.directionTicks[Direction.DOWN](
               payload.snakeHead.x,
               payload.snakeHead.y
             )
-          : payload.directionTicks[Directions.UP](
+          : payload.directionTicks[Direction.UP](
               payload.snakeHead.x,
               payload.snakeHead.y
             );
@@ -107,17 +98,6 @@ const store = createStore({
       return state.packageVersion;
     },
   },
-
-  plugins: [createLogger],
 });
-
-function areOppositeDirections(direction_a, direction_b) {
-  return (
-    (direction_a === Directions.UP && direction_b === Directions.DOWN) ||
-    (direction_a === Directions.DOWN && direction_b === Directions.UP) ||
-    (direction_a === Directions.LEFT && direction_b === Directions.RIGHT) ||
-    (direction_a === Directions.RIGHT && direction_b === Directions.LEFT)
-  );
-}
 
 export default store;

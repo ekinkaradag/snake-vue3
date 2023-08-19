@@ -111,7 +111,7 @@ git clone https://github.com/ekinkaradag/snake-vue3.git
 
   ```bash
   yarn deploy
-  ```  
+  ```
 
   - Or, if you prefer to use `npm`, you can run this:
 
@@ -120,7 +120,8 @@ git clone https://github.com/ekinkaradag/snake-vue3.git
   ```
 
 ## Thank you 👏
-Thanks to all the supporters of the project! If you would like to contribute, make sure to check out [`CONTRIBUTING.md`](https://github.com/ekinkaradag/snake-vue3/blob/main/CONTRIBUTING.md)
+
+Thanks to all the supporters of the project! If you would like to contribute, make sure to check out [`CONTRIBUTING.md`](https://github.com/ekinkaradag/snake-vue3/blob/main/.github/CONTRIBUTING.md)
 
 **Stargazers:**
 

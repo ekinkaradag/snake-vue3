@@ -4,7 +4,7 @@
   </button>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     title: {
@@ -13,7 +13,7 @@ export default {
     },
   },
   methods: {
-    handleClick(e) {
+    handleClick(e: any) {
       this.$emit("click", e);
     },
   },

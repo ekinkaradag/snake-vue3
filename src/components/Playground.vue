@@ -11,9 +11,7 @@
   </div>
 </template>
 
-<script>
-import { computed } from "vue";
-import { useStore } from "vuex";
+<script lang="ts">
 import VGrid from "@/components/Grid.vue";
 
 export default {

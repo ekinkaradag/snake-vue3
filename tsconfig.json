@@ -1,0 +1,23 @@
+// tsconfig.json
+{
+  "target": "esnext",
+  "module": "esnext",
+  "moduleResolution": "node",
+  "importHelpers": true,
+  "isolatedModules": true,
+  "noEmit": true,
+  "strict": true,
+  "include": [
+    "typings/global/*.ts",
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "vite.config.ts",
+    "./package.json"
+  ],
+  "exclude": ["node_modules", ".vscode"],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

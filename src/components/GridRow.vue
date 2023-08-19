@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script langt="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
 import VGridCell from "@/components/Cell.vue";
