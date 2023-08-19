@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import VGrid from "@/components/Grid.vue";
 
 export default {

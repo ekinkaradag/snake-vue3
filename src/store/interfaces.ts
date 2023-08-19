@@ -1,27 +1,29 @@
-export interface Coordinate {
+import { Direction } from "@/store/enums";
+
+export interface ICoordinate {
   x: number;
   y: number;
 }
 
-export interface Snake {
-  coordinates: Coordinate[];
+export interface ISnake {
+  coordinates: ICoordinate[];
 }
 
-export interface Snack {
-  coordinate: Coordinate;
+export interface ISnack {
+  coordinate: ICoordinate;
 }
 
-export interface Playground {
-  direction: "UP" | "DOWN" | "RIGHT" | "LEFT";
+export interface IPlayground {
+  direction: Direction;
   isGameOver: boolean;
 }
 
-export interface Store {
-  playground: Playground;
+export interface IStore {
+  playground: IPlayground;
   grid?: number[];
-  snake?: Snake;
-  snack?: Snack;
+  snake?: ISnake;
+  snack?: ISnack;
   tickRate: number;
   isPlaying: boolean;
-  packageVersion: string;
+  readonly packageVersion: string;
 }

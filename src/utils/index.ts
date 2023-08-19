@@ -1,4 +1,5 @@
-import { Coordinate } from "@/store/interfaces";
+import { Direction } from "@/store/enums";
+import { ICoordinate } from "@/store/interfaces";
 
 function isPosition(
   x: number,
@@ -9,7 +10,10 @@ function isPosition(
   return x === diffX && y === diffY;
 }
 
-function areSameCoordinates(coordinates_a: Coordinate, coordinates_b): boolean {
+function areSameCoordinates(
+  coordinates_a: ICoordinate,
+  coordinates_b
+): boolean {
   return isPosition(
     coordinates_a.x,
     coordinates_a.y,
@@ -34,4 +38,14 @@ function isSnack(x, y, snack): boolean {
 function isWall(x, y, gridSize): boolean {
   return (x < 0 || x >= gridSize) && (y < 0 || y >= gridSize);
 }
-export { areSameCoordinates, isSnake, isSnack, isWall };
+
+function areOppositeDirections(direction_a: Direction, direction_b: Direction) {
+  return (
+    (direction_a === Direction.UP && direction_b === Direction.DOWN) ||
+    (direction_a === Direction.DOWN && direction_b === Direction.UP) ||
+    (direction_a === Direction.LEFT && direction_b === Direction.RIGHT) ||
+    (direction_a === Direction.RIGHT && direction_b === Direction.LEFT)
+  );
+}
+
+export { areSameCoordinates, isSnake, isSnack, isWall, areOppositeDirections };

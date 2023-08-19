@@ -4,7 +4,7 @@
       <a href="https://github.com/ekinkaradag" target="_blank">
         <img
           class="icon"
-          :src="getIconUrl('github-logo')"
+          :src="getIconUrl('linkedin-logo')"
           :alt="getIconAltText('github-logo')"
         />
       </a>
@@ -41,6 +41,7 @@
 
 <script>
 export default {
+  name: "SocialLinks",
   methods: {
     getIconUrl(iconName) {
       return new URL(`../assets/${iconName}.svg`, import.meta.url);

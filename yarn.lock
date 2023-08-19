@@ -477,7 +477,7 @@
   dependencies:
     "@volar/language-core" "1.10.1"
 
-"@vue/cli-plugin-typescript@~5.0.0":
+"@vue/cli-plugin-typescript@^5.0.8":
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-typescript/-/cli-plugin-typescript-5.0.8.tgz#dd3d2b3a58f3f93359319958dc0f58a4861a33a7"
   integrity sha512-JKJOwzJshBqsmp4yLBexwVMebOZ4VGJgbnYvmHVxasJOStF2RxwyW28ZF+zIvASGdat4sAUuo/3mAQyVhm7JHg==
