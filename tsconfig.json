@@ -8,6 +8,7 @@
   "noEmit": true,
   "strict": true,
   "include": [
+    "typings/global/*.ts",
     "src/**/*.ts",
     "tests/**/*.ts",
     "vite.config.ts",
