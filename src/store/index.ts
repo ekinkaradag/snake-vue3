@@ -1,5 +1,5 @@
-import { createStore, createLogger } from "vuex";
-import { type Snake, Snack, Store } from "./interfaces";
+import { createStore } from "vuex";
+import { type Store } from "./interfaces";
 import { areSameCoordinates } from "@/utils/index";
 
 export const Directions = {
@@ -27,7 +27,6 @@ const store = createStore({
       tickRate: 150,
       isPlaying: false,
 
-      // non-game related
       packageVersion: "0",
     };
     return _store;
@@ -111,8 +110,6 @@ const store = createStore({
       return state.packageVersion;
     },
   },
-
-  // plugins: [createLogger],
 });
 
 function areOppositeDirections(direction_a, direction_b) {
