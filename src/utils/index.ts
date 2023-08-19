@@ -35,10 +35,6 @@ function isSnack(x, y, snack): boolean {
   return isPosition(x, y, snack.coordinate.x, snack.coordinate.y);
 }
 
-function isWall(x, y, gridSize): boolean {
-  return (x < 0 || x >= gridSize) && (y < 0 || y >= gridSize);
-}
-
 function areOppositeDirections(direction_a: Direction, direction_b: Direction) {
   return (
     (direction_a === Direction.UP && direction_b === Direction.DOWN) ||
@@ -48,4 +44,4 @@ function areOppositeDirections(direction_a: Direction, direction_b: Direction) {
   );
 }
 
-export { areSameCoordinates, isSnake, isSnack, isWall, areOppositeDirections };
+export { areSameCoordinates, isSnake, isSnack, areOppositeDirections };

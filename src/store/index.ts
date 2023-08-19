@@ -5,7 +5,7 @@ import { areOppositeDirections, areSameCoordinates } from "@/utils/index";
 
 const store = createStore({
   state() {
-    const _store: IStore = {
+    return {
       playground: {
         direction: Direction.RIGHT,
         isGameOver: false,
@@ -18,7 +18,6 @@ const store = createStore({
 
       packageVersion: __APP_VERSION__ || "0",
     };
-    return _store;
   },
 
   mutations: {
