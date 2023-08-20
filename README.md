@@ -17,7 +17,7 @@
 
 ## How to play 📕
 
-If you'd like to know about how to play the game, you can find about it here: [`HOW_TO_PLAY.md`](https://github.com/ekinkaradag/snake-vue3/14-how-to-play-popup/HOW_TO_PLAY.md)
+If you'd like to know about how to play the game, you can find about it here: [`HOW_TO_PLAY.md`](https://github.com/ekinkaradag/snake-vue3/blob/14-how-to-play-popup/HOW_TO_PLAY.md)
 
 ## Development 👨‍💻
 
