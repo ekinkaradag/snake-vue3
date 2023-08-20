@@ -49,7 +49,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #00000080;
   display: table;
   transition: opacity 0.3s ease;
 }
@@ -60,8 +60,10 @@ export default {
 }
 
 .modal-container {
-  overflow-y: overlay;
-  width: 300px;
+  overflow: auto;
+  max-width: calc(100vh - 190px);
+  max-height: calc(100vh - 190px);
+  width: 550px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #202020;
@@ -80,6 +82,7 @@ export default {
 }
 
 .modal-description {
+  text-align: left;
   margin: 20px 0;
   color: white;
 }
