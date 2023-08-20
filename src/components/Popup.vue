@@ -4,7 +4,7 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div v-if="!!header" class="modal-header">
-            {{ header }}
+            <h3>{{ header }}</h3>
           </div>
           <div class="modal-description">
             <slot name="description"> </slot>
@@ -60,12 +60,20 @@ export default {
 }
 
 .modal-container {
+  overflow-y: overlay;
   width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  background-color: #202020;
+  border: 2px solid #27ae60;
+  border-radius: 8px;
+  box-shadow:
+    1px 1px 1px darkgreen,
+    -1px 1px 1px darkgreen,
+    1px -1px 1px darkgreen,
+    -1px -1px 1px darkgreen,
+    0 0 10px lightgreen,
+    0 0 10px lightgreen;
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }

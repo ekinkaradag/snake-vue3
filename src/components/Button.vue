@@ -27,12 +27,18 @@ button {
   background-color: #27ae60;
   border-radius: 8px;
   border-style: none;
-  box-shadow: rgba(39, 174, 96, 0.15) 0 4px 9px;
+  box-shadow: #27ae6026 0 4px 9px;
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+  font-family:
+    Inter,
+    -apple-system,
+    system-ui,
+    "Segoe UI",
+    Helvetica,
+    Arial,
     sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -51,7 +57,10 @@ button {
   touch-action: manipulation;
   vertical-align: top;
   white-space: nowrap;
-  text-shadow: -1px -1px 0 #032b13, 1px -1px 0 #032b13, -1px 1px 0 #032b13,
+  text-shadow:
+    -1px -1px 0 #032b13,
+    1px -1px 0 #032b13,
+    -1px 1px 0 #032b13,
     1px 1px 0 #032b13;
 }
 
@@ -68,6 +77,6 @@ button:active {
 }
 
 button:hover {
-  box-shadow: rgba(56, 250, 137, 0.2) 0 6px 12px;
+  box-shadow: #38fa8933 0 6px 12px;
 }
 </style>
