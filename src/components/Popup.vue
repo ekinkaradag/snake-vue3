@@ -67,12 +67,8 @@ export default {
   background-color: #202020;
   border: 2px solid #27ae60;
   border-radius: 8px;
-  box-shadow:
-    1px 1px 1px darkgreen,
-    -1px 1px 1px darkgreen,
-    1px -1px 1px darkgreen,
-    -1px -1px 1px darkgreen,
-    0 0 10px lightgreen,
+  box-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
+    1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 10px lightgreen,
     0 0 10px lightgreen;
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
@@ -85,6 +81,7 @@ export default {
 
 .modal-description {
   margin: 20px 0;
+  color: white;
 }
 
 .modal-default-button {

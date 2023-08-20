@@ -10,6 +10,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "marked": "^7.0.4",
     "typescript": "^5.1.6",
     "vue": "^3.3.4",
     "vuex": "^4.1.0"
