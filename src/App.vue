@@ -7,6 +7,14 @@
     <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
+      @click="openPopup"
+      :style="{
+        marginBottom: '20px',
+      }"
+      title="How to play"
+    />
+    <v-button
+      v-if="!isPlaying"
       @click="onStartGame(gameRuleWithoutBorders)"
       title="Play without borders"
       class="button-play"
@@ -25,6 +33,7 @@
       }"
       title="Stop"
     />
+    <v-how-to-play-popup v-if="isShowingHowToPlayPopup" @closed="closePopup" />
     <v-playground :score="score" />
     <div class="footer">
       <v-social-links class="social-links" />
@@ -40,7 +49,13 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onBeforeUnmount, type ComputedRef } from "vue";
+import {
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  type ComputedRef,
+  ref,
+} from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
 import { Direction, GameRule } from "@/store/enums";
@@ -48,6 +63,7 @@ import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
 
 // Components
 import VButton from "@/components/Button.vue";
+import VHowToPlayPopup from "@/components/HowToPlayPopup.vue";
 import VGrid from "@/components/Grid.vue";
 import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
@@ -83,10 +99,17 @@ export default {
   name: "App",
 
   components: {
-    VGrid,
     VButton,
+    VHowToPlayPopup,
+    VGrid,
     VPlayground,
     VSocialLinks,
+  },
+
+  data() {
+    return {
+      isShowingHowToPlayPopup: false,
+    };
   },
 
   setup() {
@@ -118,6 +141,7 @@ export default {
       () => store.state.snake?.coordinates?.length - 1
     );
     const tickRate: ComputedRef<number> = computed(() => store.state.tickRate);
+    const isShowingHowToPlayPopup = ref<boolean>(false);
 
     // Interval variable (It will only run once)
     let interval = setInterval(() => {
@@ -244,6 +268,14 @@ export default {
       }
     }
 
+    function openPopup() {
+      if (!isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = true;
+    }
+
+    function closePopup() {
+      if (isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = false;
+    }
+
     function onStartGame(gameRule: GameRule) {
       onStopGame();
       generateInitials();
@@ -274,6 +306,9 @@ export default {
       gameRuleWithBorders,
       isPlaying,
       score,
+      isShowingHowToPlayPopup,
+      openPopup,
+      closePopup,
       onStartGame,
       onStopGame,
     };
@@ -300,8 +335,12 @@ body {
   color: rgb(0, 199, 0);
   margin-left: 30px;
   letter-spacing: 30px;
-  text-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
-    1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 64px lightgreen,
+  text-shadow:
+    1px 1px 1px darkgreen,
+    -1px 1px 1px darkgreen,
+    1px -1px 1px darkgreen,
+    -1px -1px 1px darkgreen,
+    0 0 64px lightgreen,
     0 0 64px lightgreen;
   font-size: 64px;
   font-family: "Courier", monospace;
@@ -337,7 +376,13 @@ body {
   border-right-width: 16.6px;
   border-radius: 5px;
   text-decoration: none;
-  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+  font-family:
+    Inter,
+    -apple-system,
+    system-ui,
+    "Segoe UI",
+    Helvetica,
+    Arial,
     sans-serif;
 }
 
