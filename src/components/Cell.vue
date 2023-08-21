@@ -35,17 +35,17 @@ export default {
     const isGameOver = computed(() => store.state.playground.isGameOver);
 
     const classNames = computed(() => ({
-      "grid-cell-snake-head": snake.value.coordinates
+      "grid-cell-snake-head": snake.value?.coordinates
         ? isSnake(
             [snake.value.coordinates[0]],
             props.coordinateX,
             props.coordinateY
           )
         : false,
-      "grid-cell-snake": snake.value.coordinates
+      "grid-cell-snake": snake.value?.coordinates
         ? isSnake(snake.value.coordinates, props.coordinateX, props.coordinateY)
         : false,
-      "grid-cell-snack": snack.value.coordinate
+      "grid-cell-snack": snack.value?.coordinate
         ? isSnack(props.coordinateX, props.coordinateY, snack.value)
         : false,
       "grid-cell-game-over": isGameOver.value,

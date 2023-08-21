@@ -7,15 +7,21 @@
     <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
+      @click="openPopup"
+      title="How to play"
+      class="button"
+    />
+    <v-button
+      v-if="!isPlaying"
       @click="onStartGame(gameRuleWithoutBorders)"
       title="Play without borders"
-      class="button-play"
+      class="button button-play"
     />
     <v-button
       v-if="!isPlaying"
       @click="onStartGame(gameRuleWithBorders)"
       title="Play with borders"
-      class="button-play"
+      class="button button-play"
     />
     <v-button
       v-else
@@ -25,6 +31,7 @@
       }"
       title="Stop"
     />
+    <v-how-to-play-popup v-if="isShowingHowToPlayPopup" @closed="closePopup" />
     <v-playground :score="score" />
     <div class="footer">
       <v-social-links class="social-links" />
@@ -40,7 +47,13 @@
 </template>
 
 <script lang="ts">
-import { computed, onMounted, onBeforeUnmount, type ComputedRef } from "vue";
+import {
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  type ComputedRef,
+  ref,
+} from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
 import { Direction, GameRule } from "@/store/enums";
@@ -48,6 +61,7 @@ import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
 
 // Components
 import VButton from "@/components/Button.vue";
+import VHowToPlayPopup from "@/components/HowToPlayPopup.vue";
 import VGrid from "@/components/Grid.vue";
 import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
@@ -83,8 +97,9 @@ export default {
   name: "App",
 
   components: {
-    VGrid,
     VButton,
+    VHowToPlayPopup,
+    VGrid,
     VPlayground,
     VSocialLinks,
   },
@@ -118,11 +133,15 @@ export default {
       () => store.state.snake?.coordinates?.length - 1
     );
     const tickRate: ComputedRef<number> = computed(() => store.state.tickRate);
+    const isShowingHowToPlayPopup = ref<boolean>(false);
 
     // Interval variable (It will only run once)
     let interval = setInterval(() => {
       clearInterval(interval);
     }, 1);
+
+    // Generate an empty grid to be displayed at the startup
+    generateGrid();
 
     function getRandomNumber(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1) + min);
@@ -244,6 +263,14 @@ export default {
       }
     }
 
+    function openPopup() {
+      if (!isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = true;
+    }
+
+    function closePopup() {
+      if (isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = false;
+    }
+
     function onStartGame(gameRule: GameRule) {
       onStopGame();
       generateInitials();
@@ -274,25 +301,27 @@ export default {
       gameRuleWithBorders,
       isPlaying,
       score,
+      isShowingHowToPlayPopup,
+      openPopup,
+      closePopup,
       onStartGame,
       onStopGame,
     };
   },
 };
 </script>
-<style>
-body {
-  background-color: black;
-}
-
+<style lang="postcss" scoped>
 .page {
   width: 100%;
   text-align: center;
 }
 
-.button-play {
+.button {
   margin: 0 10px;
   margin-bottom: 20px;
+}
+
+.button-play {
   width: 190px;
 }
 

@@ -7,9 +7,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
   },
   "dependencies": {
+    "marked": "^7.0.4",
     "typescript": "^5.1.6",
     "vue": "^3.3.4",
     "vuex": "^4.1.0"
