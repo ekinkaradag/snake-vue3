@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div v-show="score >= 0" class="score-area score">
-      Score:
-      <code class="score-value">{{ score }}</code>
+    <div class="score-area score">
+      {{ score >= 0 ? "Score:" : "" }}
+      <code v-if="score >= 0" class="score-value">{{ score }}</code>
     </div>
     <div class="game-area">
       <v-grid />

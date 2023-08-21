@@ -15,12 +15,21 @@ export default {
     VPopup,
   },
   setup() {
-    const howToPlayMarkdownContent = ref<string>("");
-    fetch(
-      "https://raw.githubusercontent.com/ekinkaradag/snake-vue3/14-how-to-play-popup/HOW_TO_PLAY.md"
-    )
+    const url =
+      "https://api.github.com/repos/ekinkaradag/snake-vue3/contents/HOW_TO_PLAY.md?ref=14-how-to-play-popup";
+    var myRequest = new Request(url, {
+      headers: new Headers({ accept: "application/vnd.github.v3.raw" }),
+    });
+    const howToPlayMarkdownContent = ref<string>("Loading...");
+    fetch(myRequest)
       .then((response) => response.text())
-      .then((text) => (howToPlayMarkdownContent.value = text));
+      .catch(
+        () =>
+          "**There was error fetching the data from [the GitHub Repo](https://api.github.com/repos/ekinkaradag/snake-vue3/contents/HOW_TO_PLAY.md). The server might not be reachable.**"
+      )
+      .then((text) => {
+        howToPlayMarkdownContent.value = text;
+      });
 
     const howToPlayMarkdownHTML = computed(() =>
       marked(howToPlayMarkdownContent.value)

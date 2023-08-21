@@ -12,18 +12,19 @@
         marginBottom: '20px',
       }"
       title="How to play"
+      class="button"
     />
     <v-button
       v-if="!isPlaying"
       @click="onStartGame(gameRuleWithoutBorders)"
       title="Play without borders"
-      class="button-play"
+      class="button button-play"
     />
     <v-button
       v-if="!isPlaying"
       @click="onStartGame(gameRuleWithBorders)"
       title="Play with borders"
-      class="button-play"
+      class="button button-play"
     />
     <v-button
       v-else
@@ -147,6 +148,8 @@ export default {
     let interval = setInterval(() => {
       clearInterval(interval);
     }, 1);
+
+    generateGrid();
 
     function getRandomNumber(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1) + min);
@@ -315,19 +318,18 @@ export default {
   },
 };
 </script>
-<style>
-body {
-  background-color: black;
-}
-
+<style lang="postcss" scoped>
 .page {
   width: 100%;
   text-align: center;
 }
 
-.button-play {
+.button {
   margin: 0 10px;
   margin-bottom: 20px;
+}
+
+.button-play {
   width: 190px;
 }
 
@@ -335,12 +337,8 @@ body {
   color: rgb(0, 199, 0);
   margin-left: 30px;
   letter-spacing: 30px;
-  text-shadow:
-    1px 1px 1px darkgreen,
-    -1px 1px 1px darkgreen,
-    1px -1px 1px darkgreen,
-    -1px -1px 1px darkgreen,
-    0 0 64px lightgreen,
+  text-shadow: 1px 1px 1px darkgreen, -1px 1px 1px darkgreen,
+    1px -1px 1px darkgreen, -1px -1px 1px darkgreen, 0 0 64px lightgreen,
     0 0 64px lightgreen;
   font-size: 64px;
   font-family: "Courier", monospace;
@@ -376,13 +374,7 @@ body {
   border-right-width: 16.6px;
   border-radius: 5px;
   text-decoration: none;
-  font-family:
-    Inter,
-    -apple-system,
-    system-ui,
-    "Segoe UI",
-    Helvetica,
-    Arial,
+  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
     sans-serif;
 }
 

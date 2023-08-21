@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 import { Direction } from "@/store/enums";
-import { type IStore } from "@/store/interfaces";
 import { areOppositeDirections, areSameCoordinates } from "@/utils/index";
+import { IStore } from "./interfaces";
 
 const store = createStore({
   state() {
@@ -17,7 +17,7 @@ const store = createStore({
       isPlaying: false,
 
       packageVersion: __APP_VERSION__ || "0",
-    };
+    } as IStore;
   },
 
   mutations: {
