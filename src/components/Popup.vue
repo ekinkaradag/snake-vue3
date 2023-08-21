@@ -14,7 +14,7 @@
               <v-button
                 class="modal-default-button"
                 title="Close"
-                @click="$emit('close')"
+                @click="$emit('closed')"
               />
             </slot>
           </div>
@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import VButton from "@/components/Button.vue";
-import { onMounted } from "vue";
 export default {
   props: {
     header: {

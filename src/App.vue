@@ -8,9 +8,6 @@
     <v-button
       v-if="!isPlaying"
       @click="openPopup"
-      :style="{
-        marginBottom: '20px',
-      }"
       title="How to play"
       class="button"
     />
@@ -107,12 +104,6 @@ export default {
     VSocialLinks,
   },
 
-  data() {
-    return {
-      isShowingHowToPlayPopup: false,
-    };
-  },
-
   setup() {
     const store = useStore();
     const gameRuleWithoutBorders: ComputedRef<GameRule> = computed(
@@ -149,6 +140,7 @@ export default {
       clearInterval(interval);
     }, 1);
 
+    // Generate an empty grid to be displayed at the startup
     generateGrid();
 
     function getRandomNumber(min: number, max: number) {
