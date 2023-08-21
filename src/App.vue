@@ -32,7 +32,7 @@
       <a
         class="source-code--link"
         target="_blank"
-        href="https:github.com/ekinkaradag/snake-vue3"
+        href="https://github.com/ekinkaradag/snake-vue3"
         >View Source Code</a
       >
     </div>
