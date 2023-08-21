@@ -23,7 +23,6 @@ export default {
     const howToPlayMarkdownContent = ref<string>("Loading...");
     fetch(myRequest)
       .then((response: Response) => {
-        console.log(response);
         if (response.ok) return response.text();
         throw new Error(
           "**There was error fetching the [`HOW_TO_PLAY.md`](https://api.github.com/repos/ekinkaradag/snake-vue3/contents/HOW_TO_PLAY.md) from [the GitHub Repo](https://github.com/ekinkaradag/snake-vue3). The server might not be reachable.**"
