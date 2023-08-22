@@ -6,7 +6,7 @@
      commits if your PR already received reviews or comments.
 
      Before submitting a Pull Request, please ensure you've done the following:
-     - 📖 Read the our Code of Conduct: https://github.com/ekinkaradag/snake-vue3/blob/main/CODE_OF_CONDUCT.md
+     - 📖 Read the our Code of Conduct: https://github.com/ekinkaradag/snake-vue3/blob/main/.github/CODE_OF_CONDUCT.md
      - 👷‍♀️ Create small PRs. In most cases this will be possible.
      - ✅ Provide tests for your changes (Not applicable yet. Disregard).
      - 📝 Use descriptive commit messages.
@@ -44,7 +44,9 @@ on the devices and browsers this has been tested on, as well as any relevant
 images for UI changes._
 
 ### UI accessibility checklist
+
 _If your PR includes UI changes, please utilize this checklist:_
+
 - [ ] Semantic HTML implemented?
 - [ ] Keyboard operability supported?
 - [ ] Color contrast tested?

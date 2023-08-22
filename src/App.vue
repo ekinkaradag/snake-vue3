@@ -1,21 +1,27 @@
 <template>
   <div class="page">
     <div class="header">
-      <div class="version">Version {{ $store.getters.appVersion }}</div>
+      <div class="version">Version {{ version }}</div>
       <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
     </div>
     <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRules.WITHOUT_BORDERS)"
-      title="Play without borders"
-      class="button-play"
+      @click="openPopup"
+      title="How to play"
+      class="button"
     />
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRules.WITH_BORDERS)"
+      @click="onStartGame(gameRuleWithoutBorders)"
+      title="Play without borders"
+      class="button button-play"
+    />
+    <v-button
+      v-if="!isPlaying"
+      @click="onStartGame(gameRuleWithBorders)"
       title="Play with borders"
-      class="button-play"
+      class="button button-play"
     />
     <v-button
       v-else
@@ -25,6 +31,7 @@
       }"
       title="Stop"
     />
+    <v-how-to-play-popup v-if="isShowingHowToPlayPopup" @closed="closePopup" />
     <v-playground :score="score" />
     <div class="footer">
       <v-social-links class="social-links" />
@@ -32,78 +39,111 @@
       <a
         class="source-code--link"
         target="_blank"
-        href="https:github.com/ekinkaradag/snake-vue3"
+        href="https://github.com/ekinkaradag/snake-vue3"
         >View Source Code</a
       >
     </div>
   </div>
 </template>
 
-<script>
-import { computed, onMounted, onBeforeUnmount } from "vue";
+<script lang="ts">
+import {
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  type ComputedRef,
+  ref,
+} from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
-import { Directions, GameRules } from "@/store/index";
+import { Direction, GameRule } from "@/store/enums";
+import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
 
 // Components
 import VButton from "@/components/Button.vue";
+import VHowToPlayPopup from "@/components/HowToPlayPopup.vue";
 import VGrid from "@/components/Grid.vue";
 import VPlayground from "@/components/Playground.vue";
 import VSocialLinks from "@/components/SocialLinks.vue";
 
 const GRID_SIZE = 35;
 const DIRECTION_TICKS_WITHOUT_BORDERS = {
-  UP: (x, y) => ({ x, y: y <= 0 ? GRID_SIZE - 1 : y - 1 }),
-  DOWN: (x, y) => ({ x, y: y >= GRID_SIZE - 1 ? 0 : y + 1 }),
-  RIGHT: (x, y) => ({ x: x >= GRID_SIZE - 1 ? 0 : x + 1, y }),
-  LEFT: (x, y) => ({ x: x <= 0 ? GRID_SIZE - 1 : x - 1, y }),
+  UP: (x: number, y: number) => ({ x, y: y <= 0 ? GRID_SIZE - 1 : y - 1 }),
+  DOWN: (x: number, y: number) => ({ x, y: y >= GRID_SIZE - 1 ? 0 : y + 1 }),
+  RIGHT: (x: number, y: number) => ({ x: x >= GRID_SIZE - 1 ? 0 : x + 1, y }),
+  LEFT: (x: number, y: number) => ({ x: x <= 0 ? GRID_SIZE - 1 : x - 1, y }),
 };
 const DIRECTION_TICKS_WITH_BORDERS = {
-  UP: (x, y) => ({ x, y: y - 1 }),
-  DOWN: (x, y) => ({ x, y: y + 1 }),
-  RIGHT: (x, y) => ({ x: x + 1, y }),
-  LEFT: (x, y) => ({ x: x - 1, y }),
+  UP: (x: number, y: number) => ({ x, y: y - 1 }),
+  DOWN: (x: number, y: number) => ({ x, y: y + 1 }),
+  RIGHT: (x: number, y: number) => ({ x: x + 1, y }),
+  LEFT: (x: number, y: number) => ({ x: x - 1, y }),
 };
 const KEY_CODES_MAPPER = {
-  38: Directions.UP, // ARROW_UP Key
-  87: Directions.UP, // W Key
+  38: Direction.UP, // ARROW_UP Key
+  87: Direction.UP, // W Key
 
-  39: Directions.RIGHT, // ARROW_RIGHT Key
-  68: Directions.RIGHT, // D Key
+  39: Direction.RIGHT, // ARROW_RIGHT Key
+  68: Direction.RIGHT, // D Key
 
-  37: Directions.LEFT, // ARROW_LEFT Key
-  65: Directions.LEFT, // A Key
+  37: Direction.LEFT, // ARROW_LEFT Key
+  65: Direction.LEFT, // A Key
 
-  40: Directions.DOWN, // ARROW_DOWN Key
-  83: Directions.DOWN, // S Key
+  40: Direction.DOWN, // ARROW_DOWN Key
+  83: Direction.DOWN, // S Key
 };
 
 export default {
   name: "App",
 
   components: {
-    VGrid,
     VButton,
+    VHowToPlayPopup,
+    VGrid,
     VPlayground,
     VSocialLinks,
   },
 
   setup() {
     const store = useStore();
-    const gameRules = computed(() => GameRules);
-    const isPlaying = computed(() => store.state.isPlaying);
-    const currentDirection = computed(() => store.state.playground.direction);
-    const snack = computed(() => store.state.snack);
-    const snake = computed(() => store.state.snake);
-    const snakeHead = computed(() => store.state.snake.coordinates[0]);
-    const snakeTail = computed(() => store.state.snake.coordinates.slice(1));
-    const score = computed(() => store.state.snake?.coordinates?.length - 1);
-    const tickRate = computed(() => store.state.tickRate);
+    const gameRuleWithoutBorders: ComputedRef<GameRule> = computed(
+      () => GameRule.WITHOUT_BORDERS
+    );
+    const gameRuleWithBorders: ComputedRef<GameRule> = computed(
+      () => GameRule.WITH_BORDERS
+    );
+    const version: ComputedRef<string> = computed(
+      () => store.getters.appVersion
+    );
+    const isPlaying: ComputedRef<boolean> = computed(
+      () => store.state.isPlaying
+    );
+    const currentDirection: ComputedRef<string> = computed(
+      () => store.state.playground.direction
+    );
+    const snack: ComputedRef<ISnack> = computed(() => store.state.snack);
+    const snake: ComputedRef<ISnake> = computed(() => store.state.snake);
+    const snakeHead: ComputedRef<ICoordinate> = computed(
+      () => store.state.snake.coordinates[0]
+    );
+    const snakeTail: ComputedRef<ICoordinate[]> = computed(() =>
+      store.state.snake.coordinates.slice(1)
+    );
+    const score: ComputedRef<number> = computed(
+      () => store.state.snake?.coordinates?.length - 1
+    );
+    const tickRate: ComputedRef<number> = computed(() => store.state.tickRate);
+    const isShowingHowToPlayPopup = ref<boolean>(false);
 
-    // Interval variable
-    let interval = null;
+    // Interval variable (It will only run once)
+    let interval = setInterval(() => {
+      clearInterval(interval);
+    }, 1);
 
-    function getRandomNumber(min, max) {
+    // Generate an empty grid to be displayed at the startup
+    generateGrid();
+
+    function getRandomNumber(min: number, max: number) {
       return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
@@ -135,9 +175,9 @@ export default {
     }
 
     function generateGrid() {
-      const grid = [];
+      const grid: number[] = [];
 
-      for (let i = 0; i < GRID_SIZE; i++) {
+      for (let i: number = 0; i < GRID_SIZE; i++) {
         grid.push(i);
       }
 
@@ -190,7 +230,7 @@ export default {
       );
     }
 
-    function onChangeDirection(e) {
+    function onChangeDirection(e: any) {
       const newDirection = KEY_CODES_MAPPER[e.keyCode];
 
       // Prevent scrolling if the user pushed an arrow key for navigating the snake
@@ -202,10 +242,10 @@ export default {
       store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
     }
 
-    function onTick(gameRule) {
+    function onTick(gameRule: GameRule) {
       if (
         snakeHeadTouchesTail() ||
-        (gameRule === gameRules.value.WITH_BORDERS && isSnakeOutside())
+        (gameRule === GameRule.WITH_BORDERS && isSnakeOutside())
       ) {
         store.commit("GAME_OVER");
         onStopGame();
@@ -213,7 +253,7 @@ export default {
         store.commit("SNAKE_MOVE", {
           isSnakeEating: isSnakeEating(),
           directionTicks:
-            gameRule === gameRules.value.WITHOUT_BORDERS
+            gameRule === GameRule.WITHOUT_BORDERS
               ? DIRECTION_TICKS_WITHOUT_BORDERS
               : DIRECTION_TICKS_WITH_BORDERS,
           snakeHead: snakeHead.value,
@@ -223,7 +263,15 @@ export default {
       }
     }
 
-    function onStartGame(gameRule) {
+    function openPopup() {
+      if (!isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = true;
+    }
+
+    function closePopup() {
+      if (isShowingHowToPlayPopup.value) isShowingHowToPlayPopup.value = false;
+    }
+
+    function onStartGame(gameRule: GameRule) {
       onStopGame();
       generateInitials();
       store.commit("IS_PLAYING", true);
@@ -248,28 +296,32 @@ export default {
     });
 
     return {
-      gameRules,
+      version,
+      gameRuleWithoutBorders,
+      gameRuleWithBorders,
       isPlaying,
       score,
+      isShowingHowToPlayPopup,
+      openPopup,
+      closePopup,
       onStartGame,
       onStopGame,
     };
   },
 };
 </script>
-<style>
-body {
-  background-color: black;
-}
-
+<style lang="postcss" scoped>
 .page {
   width: 100%;
   text-align: center;
 }
 
-.button-play {
+.button {
   margin: 0 10px;
   margin-bottom: 20px;
+}
+
+.button-play {
   width: 190px;
 }
 

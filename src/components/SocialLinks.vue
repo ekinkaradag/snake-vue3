@@ -4,7 +4,7 @@
       <a href="https://github.com/ekinkaradag" target="_blank">
         <img
           class="icon"
-          :src="getIconUrl('github-logo')"
+          :src="GitHubLogo"
           :alt="getIconAltText('github-logo')"
         />
       </a>
@@ -13,7 +13,7 @@
       <a href="https://linkedin.com/in/ekinkaradag" target="_blank">
         <img
           class="icon"
-          :src="getIconUrl('linkedin-logo')"
+          :src="LinkedInLogo"
           :alt="getIconAltText('linkedin-logo')"
         />
       </a>
@@ -22,7 +22,7 @@
       <a href="https://twitter.com/dev_ekinkaradag" target="_blank">
         <img
           class="icon"
-          :src="getIconUrl('twitter-logo')"
+          :src="TwitterLogo"
           :alt="getIconAltText('twitter-logo')"
         />
       </a>
@@ -31,7 +31,7 @@
       <a href="https://instagram.com/dev_ekinkaradag" target="_blank">
         <img
           class="icon"
-          :src="getIconUrl('instagram-logo')"
+          :src="InstagramLogo"
           :alt="getIconAltText('instagram-logo')"
         />
       </a>
@@ -39,13 +39,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import GitHubLogo from "@/assets/github-logo.svg";
+import LinkedInLogo from "@/assets/linkedin-logo.svg";
+import TwitterLogo from "@/assets/twitter-logo.svg";
+import InstagramLogo from "@/assets/instagram-logo.svg";
+
 export default {
+  name: "SocialLinks",
   methods: {
-    getIconUrl(iconName) {
-      return new URL(`../assets/${iconName}.svg`, import.meta.url);
-    },
-    getIconAltText(iconName) {
+    getIconAltText(iconName: string) {
       switch (iconName) {
         case "github-logo":
           return "GitHub icon";
@@ -59,6 +62,14 @@ export default {
           return "Alt text is not defined";
       }
     },
+  },
+  setup() {
+    return {
+      GitHubLogo,
+      LinkedInLogo,
+      TwitterLogo,
+      InstagramLogo,
+    };
   },
 };
 </script>

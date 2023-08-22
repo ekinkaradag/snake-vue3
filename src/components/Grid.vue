@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
 import VGridRow from "@/components/GridRow.vue";
