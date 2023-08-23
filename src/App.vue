@@ -7,25 +7,25 @@
     <h1 class="title">SNAKE</h1>
     <v-button
       v-if="!isPlaying"
-      @click="openPopup"
+      @clicked="openPopup"
       title="How to play"
       class="button"
     />
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRuleWithoutBorders)"
+      @clicked="onStartGame(gameRuleWithoutBorders)"
       title="Play without borders"
       class="button button-play"
     />
     <v-button
       v-if="!isPlaying"
-      @click="onStartGame(gameRuleWithBorders)"
+      @clicked="onStartGame(gameRuleWithBorders)"
       title="Play with borders"
       class="button button-play"
     />
     <v-button
       v-else
-      @click="onStopGame"
+      @clicked="onStopGame"
       :style="{
         marginBottom: '20px',
       }"
@@ -56,6 +56,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
+import { playMusic } from "@/utils/chiptune-generator/tracker";
 import { Direction, GameRule } from "@/store/enums";
 import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
 
@@ -279,11 +280,13 @@ export default {
       interval = setInterval(() => {
         onTick(gameRule);
       }, tickRate.value);
+      playMusic(true);
     }
 
     function onStopGame() {
       clearInterval(interval);
       store.commit("IS_PLAYING", false);
+      playMusic(false);
     }
 
     onMounted(() => {

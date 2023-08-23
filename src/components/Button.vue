@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     handleClick(e: any) {
-      this.$emit("click", e);
+      this.$emit("clicked", e);
     },
   },
 };
@@ -32,13 +32,7 @@ button {
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-family:
-    Inter,
-    -apple-system,
-    system-ui,
-    "Segoe UI",
-    Helvetica,
-    Arial,
+  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
     sans-serif;
   font-size: 16px;
   font-weight: 600;
@@ -57,10 +51,7 @@ button {
   touch-action: manipulation;
   vertical-align: top;
   white-space: nowrap;
-  text-shadow:
-    -1px -1px 0 #032b13,
-    1px -1px 0 #032b13,
-    -1px 1px 0 #032b13,
+  text-shadow: -1px -1px 0 #032b13, 1px -1px 0 #032b13, -1px 1px 0 #032b13,
     1px 1px 0 #032b13;
 }
 

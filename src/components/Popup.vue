@@ -14,7 +14,7 @@
               <v-button
                 class="modal-default-button"
                 title="Close"
-                @click="$emit('closed')"
+                @clicked="$emit('closed')"
               />
             </slot>
           </div>
