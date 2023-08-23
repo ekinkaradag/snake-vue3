@@ -15,6 +15,7 @@ const store = createStore({
       snack: undefined,
       tickRate: 150,
       isPlaying: false,
+      audioContext: undefined,
 
       packageVersion: __APP_VERSION__ || "0",
     } as IStore;
@@ -87,6 +88,9 @@ const store = createStore({
 
       state.snake.coordinates = [snakeHead, ...snakeTail];
       state.snack.coordinate = snackCoordinate;
+    },
+    SET_AUDIOCONTEXT(state, audioContext) {
+      state.audioContext = audioContext;
     },
     GAME_OVER(state) {
       state.playground.isGameOver = true;

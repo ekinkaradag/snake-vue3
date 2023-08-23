@@ -95,20 +95,14 @@ function mutateState(state: State): void {
   //display.setPatterns(patterns, stateString);
 }
 
-function start(play: boolean = true) {
+function start(audioContext: AudioContext) {
   const state: State = createInitialState("snake");
 
   let patterns = [[], [], [], [], []] as PatternsType<FourChannelsPlusDrums>;
 
   const clock = bpmClock();
 
-  const ctx: AudioContext = new window.AudioContext() as AudioContext;
-
-  if (play) {
-    ctx.close();
-    return;
-  }
-  const au = Audio(ctx);
+  const au = Audio(audioContext);
 
   const synths: SynthsType<FourChannelsPlusDrums> = [
     au.SquareSynth(),
@@ -151,4 +145,8 @@ function start(play: boolean = true) {
   clock.set(state.bpm, frame);
 }
 
-export { start as playMusic };
+function stop(audioContext: AudioContext) {
+  audioContext.close();
+}
+
+export { start, stop };

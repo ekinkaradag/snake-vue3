@@ -56,7 +56,10 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
-import { playMusic } from "@/utils/chiptune-generator/tracker";
+import {
+  start as playMusic,
+  stop as stopMusic,
+} from "@/utils/chiptune-generator/tracker";
 import { Direction, GameRule } from "@/store/enums";
 import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
 
@@ -135,6 +138,9 @@ export default {
     );
     const tickRate: ComputedRef<number> = computed(() => store.state.tickRate);
     const isShowingHowToPlayPopup = ref<boolean>(false);
+    const audioContext: ComputedRef<AudioContext> = computed(
+      () => store.state.audioContext
+    );
 
     // Interval variable (It will only run once)
     let interval = setInterval(() => {
@@ -280,13 +286,17 @@ export default {
       interval = setInterval(() => {
         onTick(gameRule);
       }, tickRate.value);
-      playMusic(true);
+      store.commit("SET_AUDIOCONTEXT", new window.AudioContext());
+      playMusic(audioContext.value);
     }
 
     function onStopGame() {
       clearInterval(interval);
       store.commit("IS_PLAYING", false);
-      playMusic(false);
+      if (!!audioContext.value) {
+        stopMusic(audioContext.value);
+        store.commit("SET_AUDIOCONTEXT", undefined);
+      }
     }
 
     onMounted(() => {

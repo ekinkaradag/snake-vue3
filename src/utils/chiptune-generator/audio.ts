@@ -146,7 +146,7 @@ function Audio(ctx: AudioContext) {
           0.08
         );
 
-        // Ugly workaround for safari being a bitch
+        // Ugly workaround for Safari
         if ("pan" in noisePan) {
           noisePan.pan.cancelScheduledValues(ctx.currentTime);
           noisePan.pan.setValueAtTime(rnd() * 0.4 - 0.2, ctx.currentTime);
