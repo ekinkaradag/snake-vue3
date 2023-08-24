@@ -10,11 +10,12 @@
   "include": [
     "typings/global/*.ts",
     "src/**/*.ts",
+    "src/**/*.vue",
     "tests/**/*.ts",
     "vite.config.ts",
     "./package.json"
   ],
-  "exclude": ["node_modules", ".vscode"],
+  "exclude": ["node_modules", ".vscode", "dist"],
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]
