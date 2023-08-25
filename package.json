@@ -13,6 +13,7 @@
     "marked": "^7.0.4",
     "typescript": "^5.1.6",
     "vue": "^3.3.4",
+    "vue3-popper": "^1.5.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

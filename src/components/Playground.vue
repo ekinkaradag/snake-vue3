@@ -7,17 +7,19 @@
     <div class="game-area">
       <v-grid />
     </div>
-    <div class="score-area scoreboard"></div>
+    <div class="score-area scoreboard"><v-audio-button /></div>
   </div>
 </template>
 
 <script lang="ts">
 import VGrid from "@/components/Grid.vue";
+import VAudioButton from "@/components/AudioButton.vue";
 
 export default {
   name: "Playground",
   components: {
     VGrid,
+    VAudioButton,
   },
   props: {
     score: {
