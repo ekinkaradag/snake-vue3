@@ -7,7 +7,9 @@
     <div class="game-area">
       <v-grid />
     </div>
-    <div class="score-area scoreboard"><v-audio-button /></div>
+    <div class="score-area scoreboard">
+      <div class="controls-container"><v-audio-button /></div>
+    </div>
   </div>
 </template>
 
@@ -54,7 +56,11 @@ export default {
 .scoreboard {
   flex: 1;
   float: right;
-  text-align: right;
+  text-align: left;
+}
+
+.controls-container {
+  margin: 0 10px;
 }
 
 .score-area {
