@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <input
+      v-model="value"
       type="range"
       class="slider"
       :min="min"
       :max="max"
-      v-model="modelValue"
       @input="handleChange"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { ref, defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -26,18 +26,24 @@ export default defineComponent({
       required: false,
       default: 100,
     },
-  },
-  data() {
-    return {
-      modelValue: 100,
-    };
+    modelValue: {
+      type: Number,
+      required: false,
+      default: 100,
+    },
   },
   methods: {
     handleChange(e: Event) {
       this.$emit("valueChanged", (<HTMLInputElement>e.target).valueAsNumber);
     },
   },
-  setup() {},
+  setup(props) {
+    const value = ref<number>(props.modelValue);
+
+    return {
+      value,
+    };
+  },
 });
 </script>
 

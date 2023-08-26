@@ -1,5 +1,14 @@
 <template>
   <button @click="handleClick">
+    <div class="icon-container">
+      <img
+        v-if="iconSource"
+        class="icon"
+        :src="iconSource"
+        :alt="iconAltText"
+        :height="12"
+      />
+    </div>
     {{ title }}
   </button>
 </template>
@@ -11,6 +20,16 @@ export default {
       type: String,
       required: false,
       default: "",
+    },
+    iconSource: {
+      type: String,
+      required: false,
+      default: undefined,
+    },
+    iconAltText: {
+      type: String,
+      required: false,
+      default: "Alt text is not defined",
     },
   },
   methods: {
@@ -70,5 +89,10 @@ button:active {
 
 button:hover {
   box-shadow: #38fa8933 0 6px 12px;
+}
+
+.icon-container {
+  width: 15px;
+  text-align: left;
 }
 </style>
