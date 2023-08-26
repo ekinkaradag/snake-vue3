@@ -92,7 +92,7 @@ button:hover {
 }
 
 .icon-container {
-  width: 15px;
+  height: 100%;
   text-align: left;
 }
 </style>

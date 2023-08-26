@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <p>slider: {{ value }}</p>
     <input
       v-model="value"
       type="range"
@@ -54,14 +55,13 @@ export default defineComponent({
 
 .slider {
   vertical-align: middle;
-  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 8px;
   border-radius: 5px;
-  background: #d3d3d3;
+  background: gray;
   outline: none;
   opacity: 0.7;
-  -webkit-transition: 0.2s;
   transition: opacity 0.2s;
 }
 
@@ -70,20 +70,20 @@ export default defineComponent({
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
   appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #04aa6d;
+  background: #38fa89;
   cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
+  appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #04aa6d;
+  background: #38fa89;
   cursor: pointer;
 }
 </style>

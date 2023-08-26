@@ -1,13 +1,17 @@
 <template>
-  <VPopper arrow hover placement="right">
+  <p>Level: {{ volumeLevel }}</p>
+  <VPopper arrow hover placement="right" :key="forceRerenderKey">
     <v-button
       class="audio-button"
       :icon-source="volumeIcon"
       icon-alt-text="Volume adjustment"
-      @clicked="console.log('clicked')"
+      @clicked="onVolumeChangedViaButton"
     />
     <template #content>
-      <v-slider :model-value="volumeValue" @value-changed="volumeChanged" />
+      <v-slider
+        :model-value="volumeLevel"
+        @value-changed="onVolumeChangedViaSlider"
+      />
     </template>
   </VPopper>
 </template>
@@ -28,24 +32,47 @@ export default defineComponent({
     VSlider,
   },
   setup() {
-    const volumeValue = ref<number>(100);
+    const forceRerenderKey = ref<number>(0);
+    const tempVolumeLevel = ref<number | undefined>();
+    const volumeLevel = ref<number>(100);
     const volumeIcon = computed(() =>
-      volumeValue.value > 50
+      volumeLevel.value > 50
         ? VolumeHighIcon
-        : volumeValue.value > 0
+        : volumeLevel.value > 0
         ? VolumeLowIcon
         : VolumeMutedIcon
     );
 
-    function volumeChanged(e: number) {
-      volumeValue.value = e;
-      console.log(volumeValue.value);
+    function rerenderButtonAndSlider() {
+      forceRerenderKey.value = forceRerenderKey.value === 0 ? 1 : 0;
+    }
+
+    function onVolumeChangedViaSlider(e: number) {
+      if (tempVolumeLevel.value) tempVolumeLevel.value = undefined;
+
+      volumeLevel.value = e;
+    }
+
+    function onVolumeChangedViaButton() {
+      if (!tempVolumeLevel.value) {
+        tempVolumeLevel.value = volumeLevel.value;
+        volumeLevel.value = 0;
+
+        rerenderButtonAndSlider();
+      } else {
+        volumeLevel.value = tempVolumeLevel.value;
+        tempVolumeLevel.value = undefined;
+
+        rerenderButtonAndSlider();
+      }
     }
 
     return {
-      volumeValue,
+      forceRerenderKey,
+      volumeLevel,
       volumeIcon,
-      volumeChanged,
+      onVolumeChangedViaSlider,
+      onVolumeChangedViaButton,
     };
   },
 });
