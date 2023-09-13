@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 import VPopper from "vue3-popper";
 import VolumeMutedIcon from "@/assets/volume-xmark-solid.svg";
 import VolumeLowIcon from "@/assets/volume-low-solid.svg";
@@ -32,6 +33,7 @@ export default defineComponent({
     VSlider,
   },
   setup() {
+    const store = useStore();
     const forceRerenderKey = ref<number>(0);
     const tempVolumeLevel = ref<number | undefined>();
     const volumeLevel = ref<number>(100);
@@ -42,6 +44,8 @@ export default defineComponent({
         ? VolumeLowIcon
         : VolumeMutedIcon
     );
+    const audioContext = computed(() => store.state.audioContext);
+    //let node = audioContext.value.createGainNode();
 
     function rerenderButtonAndSlider() {
       forceRerenderKey.value = forceRerenderKey.value === 0 ? 1 : 0;
@@ -50,6 +54,7 @@ export default defineComponent({
     function onVolumeChangedViaSlider(e: number) {
       if (tempVolumeLevel.value) tempVolumeLevel.value = undefined;
 
+      console.log(audioContext.value);
       volumeLevel.value = e;
     }
 

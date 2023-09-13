@@ -25,6 +25,6 @@ export interface IStore {
   snack?: ISnack;
   tickRate: number;
   isPlaying: boolean;
-  audioContext?: AudioContext;
+  audioContext: AudioContext;
   readonly packageVersion: string;
 }

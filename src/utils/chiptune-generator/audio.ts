@@ -8,33 +8,38 @@ import { fill, rnd } from "./utils";
 const A3Frequency = 440;
 const A0Frequency = A3Frequency / 8;
 
-function Audio(ctx: AudioContext) {
+function gainNode(
+  audioContext: AudioContext,
+  gainAmount: number = 0
+): GainNode {
+  const node = audioContext.createGain();
+  node.gain.value = gainAmount;
+  return node;
+}
+
+function Audio(audioContext: AudioContext) {
   function oscillatorNode(
     type: OscillatorType,
     freq: number = 440
   ): OscillatorNode {
-    const node = ctx.createOscillator();
+    const node = audioContext.createOscillator();
     node.type = type;
     node.frequency.value = freq;
     return node;
   }
   function waveShaperNode(curve: Float32Array | number[]): WaveShaperNode {
-    const node = ctx.createWaveShaper();
+    const node = audioContext.createWaveShaper();
     node.curve = new Float32Array(curve);
     return node;
   }
-  function gainNode(gainAmount: number = 0): GainNode {
-    const node = ctx.createGain();
-    node.gain.value = gainAmount;
-    return node;
-  }
+
   function stereoPannerNode(pan: number): StereoPannerNode {
-    if (ctx.createStereoPanner) {
-      const node = ctx.createStereoPanner();
+    if (audioContext.createStereoPanner) {
+      const node = audioContext.createStereoPanner();
       node.pan.value = pan;
       return node;
     } else {
-      const node = ctx.createPanner();
+      const node = audioContext.createPanner();
       node.panningModel = "equalpower";
       node.setPosition(pan, 0, 0.5);
       // @ts-ignore
@@ -45,15 +50,15 @@ function Audio(ctx: AudioContext) {
 
   function SquareSynth(pan: number = 0): Synth<Note> {
     const set = (a: AudioParam, v: number) => {
-      a.cancelScheduledValues(ctx.currentTime);
-      a.setValueAtTime(v, ctx.currentTime);
+      a.cancelScheduledValues(audioContext.currentTime);
+      a.setValueAtTime(v, audioContext.currentTime);
     };
     const towards = (a: AudioParam, v: number, t: number) => {
-      a.setTargetAtTime(t, ctx.currentTime, t);
+      a.setTargetAtTime(t, audioContext.currentTime, t);
     };
     const slide = (a: AudioParam, v: number, t: number) => {
-      a.cancelScheduledValues(ctx.currentTime);
-      a.setTargetAtTime(v, ctx.currentTime, t);
+      a.cancelScheduledValues(audioContext.currentTime);
+      a.setTargetAtTime(v, audioContext.currentTime, t);
     };
 
     const wavetableTrigger = oscillatorNode("sawtooth"),
@@ -61,8 +66,8 @@ function Audio(ctx: AudioContext) {
         new Float32Array(256).fill(-1, 0, 128).fill(1, 128, 256)
       ),
       alwaysOneWavetable = waveShaperNode(new Float32Array(2).fill(1, 0, 2)),
-      wavetableOffsetGain = gainNode(),
-      pulseOutputGain = gainNode(),
+      wavetableOffsetGain = gainNode(audioContext),
+      pulseOutputGain = gainNode(audioContext),
       outputPanner = stereoPannerNode(pan);
     wavetableTrigger.start();
     wavetableTrigger.connect(pulseWavetable);
@@ -71,7 +76,7 @@ function Audio(ctx: AudioContext) {
     wavetableOffsetGain.connect(pulseWavetable);
     pulseWavetable.connect(pulseOutputGain);
     pulseOutputGain.connect(outputPanner);
-    outputPanner.connect(ctx.destination);
+    outputPanner.connect(audioContext.destination);
 
     const freq = wavetableTrigger.frequency,
       width = wavetableOffsetGain.gain,
@@ -107,66 +112,77 @@ function Audio(ctx: AudioContext) {
 
   function DrumSynth(): Synth<Drum> {
     const toneOscillator = oscillatorNode("square", 55),
-      toneGain = gainNode(),
+      toneGain = gainNode(audioContext),
       noiseWavetableTrigger = oscillatorNode("sawtooth", 20),
       noiseWavetable = waveShaperNode(fill(1024, (x) => rnd() * 2 - 1)),
-      noiseGain = gainNode(),
+      noiseGain = gainNode(audioContext),
       noisePan = stereoPannerNode(0);
 
     toneOscillator.start();
     noiseWavetableTrigger.start();
 
     toneOscillator.connect(toneGain);
-    toneGain.connect(ctx.destination);
+    toneGain.connect(audioContext.destination);
 
     noiseWavetableTrigger.connect(noiseWavetable);
     noiseWavetable.connect(noiseGain);
     noiseGain.connect(noisePan);
-    noisePan.connect(ctx.destination);
+    noisePan.connect(audioContext.destination);
 
     function play(slot: Drum) {
       const vel = slot.vel ? slot.vel : 1;
       if (slot.drum === "KCK") {
-        toneOscillator.detune.cancelScheduledValues(ctx.currentTime);
-        toneOscillator.detune.setValueAtTime(3000, ctx.currentTime);
-        toneOscillator.detune.setTargetAtTime(0, ctx.currentTime, 0.07);
-        toneGain.gain.cancelScheduledValues(ctx.currentTime);
-        toneGain.gain.setValueAtTime(0.2 * vel, ctx.currentTime);
+        toneOscillator.detune.cancelScheduledValues(audioContext.currentTime);
+        toneOscillator.detune.setValueAtTime(3000, audioContext.currentTime);
+        toneOscillator.detune.setTargetAtTime(
+          0,
+          audioContext.currentTime,
+          0.07
+        );
+        toneGain.gain.cancelScheduledValues(audioContext.currentTime);
+        toneGain.gain.setValueAtTime(0.2 * vel, audioContext.currentTime);
         toneGain.gain.setValueCurveAtTime(
           new Float32Array([0.2 * vel, 0.2 * vel, 0.13 * vel, 0.05 * vel, 0.0]),
-          ctx.currentTime,
+          audioContext.currentTime,
           0.1
         );
       } else if (slot.drum === "NSS") {
-        noiseGain.gain.cancelScheduledValues(ctx.currentTime);
-        noiseGain.gain.setValueAtTime(0.1 * vel, ctx.currentTime);
+        noiseGain.gain.cancelScheduledValues(audioContext.currentTime);
+        noiseGain.gain.setValueAtTime(0.1 * vel, audioContext.currentTime);
         noiseGain.gain.setValueCurveAtTime(
           new Float32Array([0.1 * vel, 0.04 * vel, 0.0]),
-          ctx.currentTime,
+          audioContext.currentTime,
           0.08
         );
 
         // Ugly workaround for Safari
         if ("pan" in noisePan) {
-          noisePan.pan.cancelScheduledValues(ctx.currentTime);
-          noisePan.pan.setValueAtTime(rnd() * 0.4 - 0.2, ctx.currentTime);
+          noisePan.pan.cancelScheduledValues(audioContext.currentTime);
+          noisePan.pan.setValueAtTime(
+            rnd() * 0.4 - 0.2,
+            audioContext.currentTime
+          );
         }
       } else if (slot.drum === "SNR") {
-        toneOscillator.detune.cancelScheduledValues(ctx.currentTime);
-        toneOscillator.detune.setValueAtTime(2400, ctx.currentTime);
-        toneOscillator.detune.setTargetAtTime(600, ctx.currentTime, 0.04);
-        toneGain.gain.cancelScheduledValues(ctx.currentTime);
-        toneGain.gain.setValueAtTime(0.15 * vel, ctx.currentTime);
+        toneOscillator.detune.cancelScheduledValues(audioContext.currentTime);
+        toneOscillator.detune.setValueAtTime(2400, audioContext.currentTime);
+        toneOscillator.detune.setTargetAtTime(
+          600,
+          audioContext.currentTime,
+          0.04
+        );
+        toneGain.gain.cancelScheduledValues(audioContext.currentTime);
+        toneGain.gain.setValueAtTime(0.15 * vel, audioContext.currentTime);
         toneGain.gain.setValueCurveAtTime(
           new Float32Array([0.15 * vel, 0.05 * vel, 0.01 * vel, 0]),
-          ctx.currentTime,
+          audioContext.currentTime,
           0.1
         );
-        noiseGain.gain.cancelScheduledValues(ctx.currentTime);
-        noiseGain.gain.setValueAtTime(0.2 * vel, ctx.currentTime);
+        noiseGain.gain.cancelScheduledValues(audioContext.currentTime);
+        noiseGain.gain.setValueAtTime(0.2 * vel, audioContext.currentTime);
         noiseGain.gain.setValueCurveAtTime(
           new Float32Array([0.2 * vel, 0.15 * vel, 0.0]),
-          ctx.currentTime,
+          audioContext.currentTime,
           0.15
         );
       }
@@ -178,6 +194,7 @@ function Audio(ctx: AudioContext) {
   return {
     SquareSynth,
     DrumSynth,
+    setVolume: gainNode,
   };
 }
 

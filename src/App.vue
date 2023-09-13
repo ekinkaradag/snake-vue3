@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <div class="header">
-      <div class="version">Version {{ version }}</div>
+      <div class="version">Version {{ version }} {{ audioContext }}</div>
       <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
     </div>
     <h1 class="title">SNAKE</h1>
@@ -57,6 +57,7 @@ import {
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
 import {
+  prepare,
   start as playMusic,
   stop as stopMusic,
 } from "@/utils/chiptune-generator/tracker";
@@ -287,7 +288,8 @@ export default {
         onTick(gameRule);
       }, tickRate.value);
       store.commit("SET_AUDIOCONTEXT", new window.AudioContext());
-      playMusic(audioContext.value);
+      prepare(audioContext.value);
+      playMusic();
     }
 
     function onStopGame() {
@@ -315,6 +317,7 @@ export default {
       isPlaying,
       score,
       isShowingHowToPlayPopup,
+      audioContext,
       openPopup,
       closePopup,
       onStartGame,

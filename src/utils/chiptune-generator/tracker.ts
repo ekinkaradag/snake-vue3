@@ -10,6 +10,20 @@ import Audio from "./audio";
 import * as music from "./theory";
 import * as Generators from "./generators";
 
+let state: State;
+
+let patterns = [[], [], [], [], []] as PatternsType<FourChannelsPlusDrums>;
+
+const clock = bpmClock();
+
+let audio: {
+  SquareSynth: (pan?: number) => Synth<Note>;
+  DrumSynth: () => Synth<Drum>;
+  setVolume: (audioContext: AudioContext, gainAmount?: number) => GainNode;
+};
+
+let synths: SynthsType<FourChannelsPlusDrums>;
+
 const PatternSize = 64;
 
 const progressions = [
@@ -95,23 +109,23 @@ function mutateState(state: State): void {
   //display.setPatterns(patterns, stateString);
 }
 
-function start(audioContext: AudioContext) {
-  const state: State = createInitialState("snake");
+function prepare(audioContext: AudioContext) {
+  state = createInitialState("snake vue3");
+  audio = Audio(audioContext);
 
-  let patterns = [[], [], [], [], []] as PatternsType<FourChannelsPlusDrums>;
-
-  const clock = bpmClock();
-
-  const au = Audio(audioContext);
-
-  const synths: SynthsType<FourChannelsPlusDrums> = [
-    au.SquareSynth(),
-    au.SquareSynth(-0.5),
-    au.SquareSynth(),
-    au.SquareSynth(0.5),
-    au.DrumSynth(),
+  synths = [
+    audio.SquareSynth(),
+    audio.SquareSynth(-0.5),
+    audio.SquareSynth(),
+    audio.SquareSynth(0.5),
+    audio.DrumSynth(),
   ];
 
+  console.log("audio", audio);
+  console.log("audioContext", audioContext);
+}
+
+function start() {
   function newPatterns() {
     seedRNG(state.seedCode);
     patterns = [
@@ -149,4 +163,4 @@ function stop(audioContext: AudioContext) {
   audioContext.close();
 }
 
-export { start, stop };
+export { prepare, start, stop };
