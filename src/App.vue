@@ -54,7 +54,7 @@ import {
   type ComputedRef,
   ref,
 } from "vue";
-import { useStore } from "vuex";
+import { useGameStore } from "@/store";
 import { areSameCoordinates, isSnake } from "@/utils/index";
 import { Direction, GameRule } from "@/store/enums";
 import type { ICoordinate, IMovePayload, ISnack, ISnake } from "@/store/interfaces";
@@ -105,7 +105,7 @@ export default {
   },
 
   setup() {
-    const store = useStore();
+    const gameStore = useGameStore();
     const gameRuleWithoutBorders: ComputedRef<GameRule> = computed(
       () => GameRule.WITHOUT_BORDERS
     );
@@ -113,26 +113,31 @@ export default {
       () => GameRule.WITH_BORDERS
     );
     const version: ComputedRef<string> = computed(
-      () => store.getters.appVersion
+      () => gameStore.appVersion
     );
     const isPlaying: ComputedRef<boolean> = computed(
-      () => store.state.isPlaying
+      () => gameStore.isPlaying
     );
     const currentDirection: ComputedRef<string> = computed(
-      () => store.state.playground.direction
+      () => gameStore.playground.direction
     );
-    const snack: ComputedRef<ISnack> = computed(() => store.state.snack);
-    const snake: ComputedRef<ISnake> = computed(() => store.state.snake);
-    const snakeHead: ComputedRef<ICoordinate> = computed(
-      () => store.state.snake.coordinates[0]
+    const snack: ComputedRef<ISnack | undefined> = computed(() => gameStore.snack);
+    const snake: ComputedRef<ISnake | undefined> = computed(() => gameStore.snake);
+    const snakeHead: ComputedRef<ICoordinate | undefined> = computed(
+      () => gameStore.snake?.coordinates[0]
     );
-    const snakeTail: ComputedRef<ICoordinate[]> = computed(() =>
-      store.state.snake.coordinates.slice(1)
+    const snakeTail: ComputedRef<ICoordinate[] | undefined> = computed(() =>
+      gameStore.snake?.coordinates.slice(1)
     );
-    const score: ComputedRef<number> = computed(
-      () => store.state.snake?.coordinates?.length - 1
+    const score: ComputedRef<number | undefined> = computed(
+      () => {
+        if (gameStore.isPlaying)
+          return gameStore.snake!.coordinates.length - 1
+        else
+          return undefined
+      }
     );
-    const tickRate: ComputedRef<number> = computed(() => store.state.tickRate);
+    const tickRate: ComputedRef<number> = computed(() => gameStore.tickRate);
     const isShowingHowToPlayPopup = ref<boolean>(false);
 
     // Interval variable (It will only run once)
@@ -157,18 +162,15 @@ export default {
     function getRandomSnackCoordinate() : ICoordinate {
       let newCoordinate = getRandomCoordinate();
 
-      if (
-        snake.value.coordinates.find((snakeCellCoordinate) =>
-          areSameCoordinates(snakeCellCoordinate, newCoordinate)
-        )
-      )
+      if (snake.value?.coordinates.find((snakeCellCoordinate) =>
+            areSameCoordinates(snakeCellCoordinate, newCoordinate)))
         newCoordinate = getRandomSnackCoordinate();
 
       return newCoordinate;
     }
 
     function getSnakeTail() {
-      return snake.value.coordinates.slice(
+      return snake.value?.coordinates.slice(
         0,
         snake.value.coordinates.length - 1
       );
@@ -181,7 +183,7 @@ export default {
         grid.push(i);
       }
 
-      store.commit("SET_GRID", grid);
+      gameStore.setGrid(grid);
     }
 
     function generateSnake() {
@@ -191,7 +193,7 @@ export default {
         ],
       };
 
-      store.commit("SET_SNAKE", snake);
+      gameStore.setSnake(snake);
     }
 
     function generateSnack() {
@@ -199,7 +201,7 @@ export default {
         coordinate: getRandomSnackCoordinate(),
       };
 
-      store.commit("SET_SNACK", snack);
+      gameStore.setSnack(snack);
     }
 
     function generateInitials() {
@@ -210,18 +212,19 @@ export default {
     }
 
     function resetGame() {
-      store.commit("RESET_GAME");
+      gameStore.resetGame();
     }
 
     function snakeHeadTouchesTail() {
-      return isSnake(snakeTail.value, snakeHead.value.x, snakeHead.value.y);
+      return isSnake(snakeTail.value, snakeHead.value?.x, snakeHead.value?.y);
     }
 
     function isSnakeEating() {
-      return areSameCoordinates(snakeHead.value, snack.value.coordinate);
+      return areSameCoordinates(snakeHead.value, snack.value?.coordinate);
     }
 
     function isSnakeOutside() {
+      if (!snakeHead.value) return false;
       return (
         snakeHead.value.x >= GRID_SIZE ||
         snakeHead.value.y >= GRID_SIZE ||
@@ -231,7 +234,7 @@ export default {
     }
 
     function onChangeDirection(e: any) {
-      const newDirection = KEY_CODES_MAPPER[e.keyCode];
+      const newDirection = (KEY_CODES_MAPPER as Record<number, Direction>)[e.keyCode as keyof typeof KEY_CODES_MAPPER];
 
       // Prevent scrolling if the user pushed an arrow key for navigating the snake
       if (newDirection) e.preventDefault();
@@ -239,7 +242,7 @@ export default {
         return;
       }
 
-      store.commit("SNAKE_CHANGE_DIRECTION", newDirection);
+      gameStore.changeDirection(newDirection);
     }
 
     function onTick(gameRule: GameRule) {
@@ -247,10 +250,10 @@ export default {
         snakeHeadTouchesTail() ||
         (gameRule === GameRule.WITH_BORDERS && isSnakeOutside())
       ) {
-        store.commit("GAME_OVER");
+        gameStore.gameOver();
         onStopGame();
       } else {
-        store.commit("SNAKE_MOVE", {
+        gameStore.moveSnake({
           isSnakeEating: isSnakeEating(),
           directionTicks:
             gameRule === GameRule.WITHOUT_BORDERS
@@ -274,7 +277,7 @@ export default {
     function onStartGame(gameRule: GameRule) {
       onStopGame();
       generateInitials();
-      store.commit("IS_PLAYING", true);
+      gameStore.setIsPlaying(true);
 
       interval = setInterval(() => {
         onTick(gameRule);
@@ -283,7 +286,7 @@ export default {
 
     function onStopGame() {
       clearInterval(interval);
-      store.commit("IS_PLAYING", false);
+      gameStore.setIsPlaying(false);
     }
 
     onMounted(() => {

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useGameStore } from "@/store";
 import { isSnake, isSnack } from "@/utils/index";
 
 export default {
@@ -29,10 +29,10 @@ export default {
   },
 
   setup(props) {
-    const store = useStore();
-    const snake = computed(() => store.state.snake);
-    const snack = computed(() => store.state.snack);
-    const isGameOver = computed(() => store.state.playground.isGameOver);
+    const gameStore = useGameStore();
+    const snake = computed(() => gameStore.snake);
+    const snack = computed(() => gameStore.snack);
+    const isGameOver = computed(() => gameStore.playground.isGameOver);
 
     const classNames = computed(() => ({
       "grid-cell-snake-head": snake.value?.coordinates

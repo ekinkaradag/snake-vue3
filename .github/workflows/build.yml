@@ -24,8 +24,8 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Run Typecheck
-        run: yarn typecheck
+      - name: Run Type-check
+        run: yarn type-check
         timeout-minutes: 1
       - name: Build
         run: yarn build

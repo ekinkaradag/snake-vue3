@@ -1,5 +1,5 @@
 <template>
-  <div v-if="grid.length > 0" class="grid-row">
+  <div v-if="grid && grid.length > 0" class="grid-row">
     <v-grid-cell
       :key="-1"
       :coordinate-x="-1"
@@ -27,7 +27,7 @@
 
 <script langt="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useGameStore } from "@/store";
 import VGridCell from "@/components/Cell.vue";
 
 export default {
@@ -48,8 +48,8 @@ export default {
   },
 
   setup() {
-    const store = useStore();
-    const grid = computed(() => store.state.grid);
+    const gameStore = useGameStore();
+    const grid = computed(() => gameStore.grid);
 
     return {
       grid,

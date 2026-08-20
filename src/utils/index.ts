@@ -11,9 +11,10 @@ function isPosition(
 }
 
 function areSameCoordinates(
-  coordinates_a: ICoordinate,
-  coordinates_b: ICoordinate
+  coordinates_a: ICoordinate | undefined,
+  coordinates_b: ICoordinate | undefined
 ): boolean {
+  if (coordinates_a === undefined || coordinates_b === undefined) return false;
   return isPosition(
     coordinates_a.x,
     coordinates_a.y,
@@ -22,7 +23,8 @@ function areSameCoordinates(
   );
 }
 
-function isSnake(snakeCoordinates: ICoordinate[], x: number, y: number): boolean {
+function isSnake(snakeCoordinates: ICoordinate[] | undefined, x: number | undefined, y: number | undefined): boolean {
+  if (snakeCoordinates === undefined || x === undefined || y === undefined) return false;
   if (!snakeCoordinates.length) return false;
 
   return (
