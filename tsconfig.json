@@ -14,9 +14,13 @@
     "vite.config.ts",
     "./package.json"
   ],
+  "types": [
+    "vuex/types"
+  ],
   "exclude": ["node_modules", ".vscode"],
   "compilerOptions": {
     "paths": {
+      "vuex": ["./node_modules/vuex/types/index.d.ts"],
       "@/*": ["./src/*"]
     }
   }
