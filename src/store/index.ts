@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
+import { areOppositeOrSameDirections, areSameCoordinates } from "@/utils/index";
 import { Direction } from "@/store/enums";
-import { areOppositeDirections, areSameCoordinates } from "@/utils/index";
-import { IStore } from "./interfaces";
+import { IStore, ISnake, ISnack, IMovePayload } from "@/store/interfaces";
 
 const store = createStore({
   state() {
@@ -21,66 +21,66 @@ const store = createStore({
   },
 
   mutations: {
-    SET_GRID(state, grid) {
+    SET_GRID(state: IStore, grid: number[]) {
       state.grid = grid;
     },
-    SET_SNAKE(state, snake) {
+    SET_SNAKE(state: IStore, snake: ISnake) {
       state.snake = snake;
     },
-    SET_SNACK(state, snack) {
+    SET_SNACK(state: IStore, snack: ISnack) {
       state.snack = snack;
     },
-    RESET_GAME(state) {
+    RESET_GAME(state: IStore) {
       state.grid = [];
       state.snack = undefined;
       state.snake = undefined;
       state.playground.isGameOver = false;
     },
-    IS_PLAYING(state, val) {
+    IS_PLAYING(state: IStore, val: boolean) {
       state.isPlaying = val;
     },
-    SNAKE_CHANGE_DIRECTION(state, direction) {
-      if (!areOppositeDirections(state.playground.direction, direction))
+    SNAKE_CHANGE_DIRECTION(state: IStore, direction: Direction) {
+      if (!areOppositeOrSameDirections(state.playground.direction, direction))
         state.playground.direction = direction;
     },
-    SNAKE_MOVE(state, payload) {
+    SNAKE_MOVE(state: IStore, payload: IMovePayload) {
       if (!state.snake) return;
       if (!state.snack) return;
       const isSnakeEating = payload.isSnakeEating;
       if (isSnakeEating) state.tickRate += 1;
 
       const snakeHead_new = payload.directionTicks[state.playground.direction](
-        payload.snakeHead.x,
-        payload.snakeHead.y
+        payload.snakeHeadCoordinate.x,
+        payload.snakeHeadCoordinate.y
       );
       const snakeNeck = state.snake.coordinates[1];
 
       const snakeHead =
         !snakeNeck || !areSameCoordinates(snakeHead_new, snakeNeck)
           ? snakeHead_new
-          : payload.snakeHead.x > snakeNeck.x
+          : payload.snakeHeadCoordinate.x > snakeNeck.x
           ? payload.directionTicks[Direction.RIGHT](
-              payload.snakeHead.x,
-              payload.snakeHead.y
+              payload.snakeHeadCoordinate.x,
+              payload.snakeHeadCoordinate.y
             )
-          : payload.snakeHead.x < snakeNeck.x
+          : payload.snakeHeadCoordinate.x < snakeNeck.x
           ? payload.directionTicks[Direction.LEFT](
-              payload.snakeHead.x,
-              payload.snakeHead.y
+              payload.snakeHeadCoordinate.x,
+              payload.snakeHeadCoordinate.y
             )
-          : payload.snakeHead.y > snakeNeck.y
+          : payload.snakeHeadCoordinate.y > snakeNeck.y
           ? payload.directionTicks[Direction.DOWN](
-              payload.snakeHead.x,
-              payload.snakeHead.y
+              payload.snakeHeadCoordinate.x,
+              payload.snakeHeadCoordinate.y
             )
           : payload.directionTicks[Direction.UP](
-              payload.snakeHead.x,
-              payload.snakeHead.y
+              payload.snakeHeadCoordinate.x,
+              payload.snakeHeadCoordinate.y
             );
 
       const snakeTail = isSnakeEating
         ? state.snake.coordinates
-        : payload.snakeTail;
+        : payload.snakeTailCoordinates;
       const snackCoordinate = isSnakeEating
         ? payload.snackRandomCoordinate
         : state.snack.coordinate;
@@ -88,13 +88,13 @@ const store = createStore({
       state.snake.coordinates = [snakeHead, ...snakeTail];
       state.snack.coordinate = snackCoordinate;
     },
-    GAME_OVER(state) {
+    GAME_OVER(state: IStore) {
       state.playground.isGameOver = true;
     },
   },
 
   getters: {
-    appVersion: (state) => {
+    appVersion: (state: IStore) => {
       return state.packageVersion;
     },
   },

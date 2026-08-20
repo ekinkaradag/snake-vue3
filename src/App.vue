@@ -57,7 +57,7 @@ import {
 import { useStore } from "vuex";
 import { areSameCoordinates, isSnake } from "@/utils/index";
 import { Direction, GameRule } from "@/store/enums";
-import type { ICoordinate, ISnack, ISnake } from "@/store/interfaces";
+import type { ICoordinate, IMovePayload, ISnack, ISnake } from "@/store/interfaces";
 
 // Components
 import VButton from "@/components/Button.vue";
@@ -147,14 +147,14 @@ export default {
       return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    function getRandomCoordinate() {
+    function getRandomCoordinate(): ICoordinate {
       return {
         y: getRandomNumber(1, GRID_SIZE - 1),
         x: getRandomNumber(1, GRID_SIZE - 1),
-      };
+      } as ICoordinate;
     }
 
-    function getRandomSnackCoordinate() {
+    function getRandomSnackCoordinate() : ICoordinate {
       let newCoordinate = getRandomCoordinate();
 
       if (
@@ -256,10 +256,10 @@ export default {
             gameRule === GameRule.WITHOUT_BORDERS
               ? DIRECTION_TICKS_WITHOUT_BORDERS
               : DIRECTION_TICKS_WITH_BORDERS,
-          snakeHead: snakeHead.value,
-          snakeTail: getSnakeTail(),
+          snakeHeadCoordinate: snakeHead.value,
+          snakeTailCoordinates: getSnakeTail(),
           snackRandomCoordinate: getRandomSnackCoordinate(),
-        });
+        } as IMovePayload);
       }
     }
 
