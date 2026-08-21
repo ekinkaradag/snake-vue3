@@ -65,6 +65,7 @@ export default {
   width: 15px;
   height: 15px;
   position: relative;
+  aspect-ratio: 1 / 1;
 }
 
 .grid-cell:not(:first-child) {
