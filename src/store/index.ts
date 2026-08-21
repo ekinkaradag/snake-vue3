@@ -1,103 +1,107 @@
-import { createStore } from "vuex";
+import { defineStore } from 'pinia';
+import { areOppositeOrSameDirections, areSameCoordinates } from "@/utils/index";
 import { Direction } from "@/store/enums";
-import { areOppositeDirections, areSameCoordinates } from "@/utils/index";
-import { IStore } from "./interfaces";
+import { IStore, ISnake, ISnack, IMovePayload } from "@/store/interfaces";
 
-const store = createStore({
-  state() {
-    return {
-      playground: {
-        direction: Direction.RIGHT,
-        isGameOver: false,
-      },
-      grid: [],
-      snake: undefined,
-      snack: undefined,
-      tickRate: 150,
-      isPlaying: false,
+export const useGameStore = defineStore('snake', {
+  state: () => ({
+    playground: {
+      direction: Direction.RIGHT,
+      isGameOver: false,
+    },
+    grid: [] as number[],
+    snake: undefined as ISnake | undefined,
+    snack: undefined as ISnack | undefined,
+    tickRate: 150,
+    isPlaying: false,
 
-      packageVersion: __APP_VERSION__ || "0",
-    } as IStore;
-  },
-
-  mutations: {
-    SET_GRID(state, grid) {
-      state.grid = grid;
-    },
-    SET_SNAKE(state, snake) {
-      state.snake = snake;
-    },
-    SET_SNACK(state, snack) {
-      state.snack = snack;
-    },
-    RESET_GAME(state) {
-      state.grid = [];
-      state.snack = undefined;
-      state.snake = undefined;
-      state.playground.isGameOver = false;
-    },
-    IS_PLAYING(state, val) {
-      state.isPlaying = val;
-    },
-    SNAKE_CHANGE_DIRECTION(state, direction) {
-      if (!areOppositeDirections(state.playground.direction, direction))
-        state.playground.direction = direction;
-    },
-    SNAKE_MOVE(state, payload) {
-      if (!state.snake) return;
-      if (!state.snack) return;
-      const isSnakeEating = payload.isSnakeEating;
-      if (isSnakeEating) state.tickRate += 1;
-
-      const snakeHead_new = payload.directionTicks[state.playground.direction](
-        payload.snakeHead.x,
-        payload.snakeHead.y
-      );
-      const snakeNeck = state.snake.coordinates[1];
-
-      const snakeHead =
-        !snakeNeck || !areSameCoordinates(snakeHead_new, snakeNeck)
-          ? snakeHead_new
-          : payload.snakeHead.x > snakeNeck.x
-          ? payload.directionTicks[Direction.RIGHT](
-              payload.snakeHead.x,
-              payload.snakeHead.y
-            )
-          : payload.snakeHead.x < snakeNeck.x
-          ? payload.directionTicks[Direction.LEFT](
-              payload.snakeHead.x,
-              payload.snakeHead.y
-            )
-          : payload.snakeHead.y > snakeNeck.y
-          ? payload.directionTicks[Direction.DOWN](
-              payload.snakeHead.x,
-              payload.snakeHead.y
-            )
-          : payload.directionTicks[Direction.UP](
-              payload.snakeHead.x,
-              payload.snakeHead.y
-            );
-
-      const snakeTail = isSnakeEating
-        ? state.snake.coordinates
-        : payload.snakeTail;
-      const snackCoordinate = isSnakeEating
-        ? payload.snackRandomCoordinate
-        : state.snack.coordinate;
-
-      state.snake.coordinates = [snakeHead, ...snakeTail];
-      state.snack.coordinate = snackCoordinate;
-    },
-    GAME_OVER(state) {
-      state.playground.isGameOver = true;
-    },
-  },
+    packageVersion: __APP_VERSION__ || "0",
+  } as IStore),
 
   getters: {
     appVersion: (state) => {
       return state.packageVersion;
     },
   },
-});
 
-export default store;
+  actions: {
+    // State setters are now direct actions
+    setGrid(grid: number[]) {
+      this.grid = grid;
+    },
+    setSnake(snake: ISnake) {
+      this.snake = snake;
+    },
+    setSnack(snack: ISnack) {
+      this.snack = snack;
+    },
+
+    // Game state actions
+    resetGame() {
+      this.grid = [];
+      this.snack = undefined;
+      this.snake = undefined;
+      this.playground.isGameOver = false;
+    },
+    setIsPlaying(val: boolean) {
+      this.isPlaying = val;
+    },
+
+    // Direction change logic (was SNAKE_CHANGE_DIRECTION mutation)
+    changeDirection(direction: Direction) {
+      if (!areOppositeOrSameDirections(this.playground.direction, direction)) {
+        this.playground.direction = direction;
+      }
+    },
+
+    // Movement logic (was SNAKE_MOVE mutation)
+    moveSnake(payload: IMovePayload) {
+      if (!this.snake || !this.snack) return;
+      const isSnakeEating = payload.isSnakeEating;
+      if (isSnakeEating) this.tickRate += 1;
+
+      // Calculate new head position
+      let snakeHead_new: { x: number, y: number };
+      const snakeNeck = this.snake.coordinates[1];
+
+      if (!snakeNeck || !areSameCoordinates(payload.snakeHeadCoordinate, snakeNeck)) {
+        snakeHead_new = payload.directionTicks[this.playground.direction](
+          payload.snakeHeadCoordinate.x,
+          payload.snakeHeadCoordinate.y
+        );
+      } else if (payload.snakeHeadCoordinate.x > snakeNeck.x) {
+        snakeHead_new = payload.directionTicks[Direction.RIGHT](
+          payload.snakeHeadCoordinate.x,
+          payload.snakeHeadCoordinate.y
+        );
+      } else if (payload.snakeHeadCoordinate.x < snakeNeck.x) {
+        snakeHead_new = payload.directionTicks[Direction.LEFT](
+          payload.snakeHeadCoordinate.x,
+          payload.snakeHeadCoordinate.y
+        );
+      } else if (payload.snakeHeadCoordinate.y > snakeNeck.y) {
+        snakeHead_new = payload.directionTicks[Direction.DOWN](
+          payload.snakeHeadCoordinate.x,
+          payload.snakeHeadCoordinate.y
+        );
+      } else { // Up
+        snakeHead_new = payload.directionTicks[Direction.UP](
+          payload.snakeHeadCoordinate.x,
+          payload.snakeHeadCoordinate.y
+        );
+      }
+
+      // Determine tail and snack coordinates
+      const snakeTail = isSnakeEating ? this.snake.coordinates : payload.snakeTailCoordinates;
+      const snackCoordinate = isSnakeEating ? payload.snackRandomCoordinate : this.snack.coordinate;
+
+      // Update state
+      this.snake.coordinates = [snakeHead_new, ...snakeTail];
+      this.snack.coordinate = snackCoordinate;
+    },
+
+    gameOver() {
+      this.playground.isGameOver = true;
+    }
+  },
+});

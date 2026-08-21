@@ -1,5 +1,5 @@
 <template>
-  <div class="game-grid">
+  <div v-if="grid" class="game-grid">
     <v-grid-row :key="-1" :coordinate-y="-1" :is-floor-or-ceiling-wall="true" />
     <v-grid-row v-for="(row, key) in grid" :key="key" :coordinate-y="row" />
     <v-grid-row
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useGameStore } from "@/store";
 import VGridRow from "@/components/GridRow.vue";
 
 export default {
@@ -23,8 +23,8 @@ export default {
   },
 
   setup() {
-    const store = useStore();
-    const grid = computed(() => store.state.grid);
+    const gameStore = useGameStore();
+    const grid = computed(() => gameStore.grid);
 
     return {
       grid,

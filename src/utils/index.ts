@@ -1,5 +1,5 @@
 import { Direction } from "@/store/enums";
-import { ICoordinate } from "@/store/interfaces";
+import { ICoordinate, ISnack } from "@/store/interfaces";
 
 function isPosition(
   x: number,
@@ -11,9 +11,10 @@ function isPosition(
 }
 
 function areSameCoordinates(
-  coordinates_a: ICoordinate,
-  coordinates_b
+  coordinates_a: ICoordinate | undefined,
+  coordinates_b: ICoordinate | undefined
 ): boolean {
+  if (coordinates_a === undefined || coordinates_b === undefined) return false;
   return isPosition(
     coordinates_a.x,
     coordinates_a.y,
@@ -22,7 +23,8 @@ function areSameCoordinates(
   );
 }
 
-function isSnake(snakeCoordinates, x, y): boolean {
+function isSnake(snakeCoordinates: ICoordinate[] | undefined, x: number | undefined, y: number | undefined): boolean {
+  if (snakeCoordinates === undefined || x === undefined || y === undefined) return false;
   if (!snakeCoordinates.length) return false;
 
   return (
@@ -31,12 +33,13 @@ function isSnake(snakeCoordinates, x, y): boolean {
   );
 }
 
-function isSnack(x, y, snack): boolean {
+function isSnack(x: number, y: number, snack: ISnack): boolean {
   return isPosition(x, y, snack.coordinate.x, snack.coordinate.y);
 }
 
-function areOppositeDirections(direction_a: Direction, direction_b: Direction) {
+function areOppositeOrSameDirections(direction_a: Direction, direction_b: Direction): boolean {
   return (
+    (direction_a === direction_b) ||
     (direction_a === Direction.UP && direction_b === Direction.DOWN) ||
     (direction_a === Direction.DOWN && direction_b === Direction.UP) ||
     (direction_a === Direction.LEFT && direction_b === Direction.RIGHT) ||
@@ -44,4 +47,4 @@ function areOppositeDirections(direction_a: Direction, direction_b: Direction) {
   );
 }
 
-export { areSameCoordinates, isSnake, isSnack, areOppositeDirections };
+export { areSameCoordinates, isSnake, isSnack, areOppositeOrSameDirections };
