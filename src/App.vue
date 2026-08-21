@@ -2,7 +2,7 @@
   <div class="page">
     <div class="header">
       <div class="version">Version {{ version }}</div>
-      <div class="disclaimer">© Copyright 2023 Ekin Karadag</div>
+      <div class="disclaimer">© Copyright 2023 - 2026 Ekin Karadag</div>
     </div>
     <h1 class="title">SNAKE</h1>
     <v-button
