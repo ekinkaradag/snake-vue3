@@ -7,12 +7,21 @@
 <p align="center">
   <a href="https://github.com/ekinkaradag/snake-vue3/graphs/contributors" alt="Contributors">
     <img src="https://img.shields.io/github/contributors/ekinkaradag/snake-vue3" /></a>
-  <a href="#backers" alt="Backers on Open Collective">
-    <img src="https://img.shields.io/opencollective/backers/shields" /></a>
   <a href="https://github.com/ekinkaradag/snake-vue3/pulse" alt="Activity">
     <img src="https://img.shields.io/github/commit-activity/m/ekinkaradag/snake-vue3" /></a>
+  <a href="https://github.com/ekinkaradag/snake-vue3/commits" alt="Last commit">
+    <img src="https://img.shields.io/github/last-commit/ekinkaradag/snake-vue3" /></a>
+  <a href="https://github.com/ekinkaradag/snake-vue3/releases" alt="Latest release version">
+    <img src="https://img.shields.io/github/v/tag/ekinkaradag/snake-vue3" /></a>
+
   <a href="https://twitter.com/intent/follow?screen_name=dev_ekinkaradag">
     <img src="https://img.shields.io/twitter/follow/dev_ekinkaradag?style=social&logo=twitter" alt="follow on Twitter"></a>
+</p>
+<p align="center">
+  <a href="https://github.com/ekinkaradag/snake-vue3/stargazers" alt="Stargazers">
+    <img src="https://img.shields.io/github/stars/ekinkaradag/snake-vue3" /></a>
+  <a href="https://github.com/ekinkaradag/snake-vue3/forks" alt="Forks">
+    <img src="https://img.shields.io/github/forks/ekinkaradag/snake-vue3" /></a>
 </p>
 
 ## How to play 📕
@@ -113,11 +122,3 @@ git clone https://github.com/ekinkaradag/snake-vue3.git
 ## Thank you 👏
 
 Thanks to all the supporters of the project! If you would like to contribute, make sure to check out [`CONTRIBUTING.md`](https://github.com/ekinkaradag/snake-vue3/blob/main/.github/CONTRIBUTING.md)
-
-**Stargazers:**
-
-[![Stargazers repo roster for @ekinkaradag/snake-vue3](https://reporoster.com/stars/dark/ekinkaradag/snake-vue3)](https://github.com/ekinkaradag/snake-vue3/stargazers)
-
-**Forkers:**
-
-[![Forkers repo roster for @ekinkaradag/snake-vue3](https://reporoster.com/forks/dark/ekinkaradag/snake-vue3)](https://github.com/ekinkaradag/snake-vue3/network/members)
